@@ -1,0 +1,114 @@
+#   asapi/lv
+#   Copyright (C) 2017  tynn
+#
+#   This program is free software: you can redistribute it and/or modify
+#   it under the terms of the GNU Affero General Public License as published by
+#   the Free Software Foundation, either version 3 of the License, or
+#   (at your option) any later version.
+#
+#   This program is distributed in the hope that it will be useful,
+#   but WITHOUT ANY WARRANTY; without even the implied warranty of
+#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#   GNU Affero General Public License for more details.
+#
+#   You should have received a copy of the GNU Affero General Public License
+#   along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+defmodule Asapi.Router do
+  use Trot.Router
+  use Trot.Template
+  @template_root "html"
+
+  @shields "https://img.shields.io/badge"
+  @label "API"
+  @color "blue"
+
+  get "/:path/api.png" do
+    badge? path, :png
+  end
+
+  get "/:path/api.svg" do
+    badge? path, :svg
+  end
+
+  get "/:path/api.txt" do
+    asapi_lv? path
+  end
+
+  get "/:group/:artifact" do
+    asapi_lv! library(group, artifact), conn
+  end
+
+  get "/:group/:artifact/+" do
+    {:redirect, "/#{group}/#{artifact}"}
+  end
+
+  get "/:group/:artifact/api.png" do
+    badge? library(group, artifact), :png
+  end
+
+  get "/:group/:artifact/api.svg" do
+    badge? library(group, artifact), :svg
+  end
+
+  get "/:group/:artifact/api.txt" do
+    asapi_lv? library group, artifact
+  end
+
+  get "/*path" do
+    case Enum.reverse(path) do
+      ["api.png" | path] -> badge? library(Enum.reverse(path)), :png
+      ["api.svg" | path] -> badge? library(Enum.reverse(path)), :svg
+      ["api.txt" | path] -> asapi_lv? library Enum.reverse path
+      _ -> asapi_lv! library(path), conn
+    end
+  end
+
+  defp library(path) do
+    Enum.join(path, ":")
+  end
+
+  defp library(group, artifact) do
+    group <> ":" <> artifact <> ":+"
+  end
+
+  defp asapi_lv!(lib, conn) do
+    path = case conn.request_path do
+      "/" -> ""
+      path -> path
+    end
+    api = asapi_lv? lib
+    render_template "asapi.html.eex", [host: conn.host, path: path, lib: lib, api: api]
+  end
+
+  defp asapi_lv?(lib) do
+    try do
+      Asapi.Lv.of? Asapi.aar lib
+    rescue
+      _ -> "unknown"
+    end
+  end
+
+  defp shield(api) do
+    "#{@shields}/#{@label}-#{encode api}-#{@color}"
+  end
+
+  defp encode(part) do
+    URI.encode part, &URI.char_unreserved?/1
+  end
+
+  defp unknown() do
+    "#{@shields}/#{@label}-unknown-lightgrey"
+  end
+
+  defp shields_uri(lib) do
+    case asapi_lv? lib do
+      "unknown" -> unknown
+      api -> shield api
+    end
+  end
+
+  defp badge?(lib, type) do
+    {:redirect, shields_uri(lib) <> "." <> to_string type}
+  end
+end

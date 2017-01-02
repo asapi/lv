@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<!--
+  -  asapi/lv
+  -  Copyright (C) 2017  tynn
+  -
+  -  This program is free software: you can redistribute it and/or modify
+  -  it under the terms of the GNU Affero General Public License as published by
+  -  the Free Software Foundation, either version 3 of the License, or
+  -  (at your option) any later version.
+  -
+  -  This program is distributed in the hope that it will be useful,
+  -  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  -  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  -  GNU Affero General Public License for more details.
+  -
+  -  You should have received a copy of the GNU Affero General Public License
+  -  along with this program. If not, see <http://www.gnu.org/licenses/>.
+  -->
+<meta charset="utf-8">
+<!-- knowitall knowitnow nevermind -->
+<style type="text/css">
+hr { border: none; border-top: 2px dashed lightgray; margin: 24px 12px; }
+input[type="search"] { flex-grow: 10; }
+p > img { vertical-align: top; }
+ul {list-style-type: none; padding: 0; }
+ul > li { padding: 2px 0; }
+</style>
+<title>Android SDK API level - <%= @lib %></title>
+<div style="margin:auto;max-width:678px;padding:8px">
+<h2 style="text-align:center">Android SDK API level of @aar artifacts</h2>
+<hr>
+<form method="get" style="display:flex">
+<input type="search" name="library" placeholder="groupId:artifactId:version" value="<%= @lib %>">
+<input type="submit" value="Search">
+<script type="text/javascript">
+history.replaceState("<%= @lib %>", "Android SDK API level - <%= @lib %>", "")
+function updateImgAlt(img) {
+  if (this.readyState == 4) {
+    var api = this.status == 200 ? this.responseText : "unknown"
+    img.alt = "API level " + api
+  }
+}
+function loadApiLevelText(img, path) {
+  var xhttp = new XMLHttpRequest()
+  xhttp.onreadystatechange = updateImgAlt.bind(xhttp, img)
+  xhttp.open("GET", path + "/api.txt", true)
+  xhttp.send()
+}
+function updatePage(library) {
+  document.title = "Android API level - " + library
+  path = library.replace(/:/g, "/")
+  if (path.endsWith("/")) path = path.substring(0, path.length-1)
+  if (path.endsWith("/+")) path = path.substring(0, path.length-2)
+  if (!path.startsWith("/")) path = "/" + path
+  badge = path + "/api.svg"
+  document.getElementById("url").innerText = "<%= @host %>" + badge
+  a = document.getElementById("badge")
+  a.href = path
+  a.firstElementChild.src = badge
+  loadApiLevelText(a.firstElementChild, path)
+  return path
+}
+window.onpopstate = function(e) {
+  updatePage(e.state)
+}
+document.forms[0].onsubmit = function(e) {
+  library = document.forms[0][0].value
+  history.pushState(library, document.title, updatePage(library))
+  return false
+}
+</script>
+</form>
+<p style="text-align:center" id="url">
+<%= @host %><%= @path %>/api.svg
+<p style="text-align:center">
+<a id="badge" href="<%= @path %>">
+<img alt="API level <%= @api %>" src="<%= @path %>/api.svg">
+</a>
+<hr>
+<div style="float:right;min-width:128px;text-align:right">
+<h4>Repositories</h4>
+<ul>
+<li><a href="https://search.maven.org/">Maven Central</a>
+<li><a href="https://bintray.com/bintray/jcenter">JCenter</a>
+<li><a href="https://jitpack.io/">JitPack</a>
+</ul>
+<h4>References</h4>
+<ul>
+<li><a href="https://shields.io/#your-badge">shields.io</a>
+<li><a href="https://developer.android.com/about/index.html">Android</a>
+<li><a href="https://android-arsenal.com/api">Versions</a>
+<li><a href="https://daringfireball.net/projects/markdown/syntax#img">Markdown</a>
+</ul>
+<h4>Contribute</h4>
+<a href="https://github.com/asapi/lv">
+<svg width="1.1em" height="1.1em" viewbox="0 0 32 32" style="vertical-align:top">
+<!-- (c) & (t) GitHub, Inc. -->
+<g>
+<path d="M 15.998527,0.39484182 C 7.1633875,0.39484182 0,7.5582293
+ 0,16.395333 c 0,7.069093 4.5840572,13.065594 10.942018,15.182295
+ 0.800516,0.146352 1.092237,-0.347709 1.092237,-0.772031 0,-0.37914
+ -0.01375,-1.385924 -0.02161,-2.720771 C 7.562172,29.051338 6.6231622,25.93964
+ 6.6231622,25.93964 5.8953313,24.09207 4.846312,23.599974 4.846312,23.599974
+ 3.3935971,22.606941 4.9563216,22.626586 4.9563216,22.626586
+ c 1.6059424,0.113938 2.4506584,1.64916 2.4506584,1.64916 1.427177,2.444765
+ 3.745235,1.738544 4.656742,1.329937 0.14537,-1.034286 0.557905,-1.739526
+ 1.015624,-2.139292 -3.552718,-0.403696 -7.2881308,-1.77685 -7.2881308,-7.907916
+ 0,-1.746401 0.6237147,-3.17456 1.647196,-4.293318 C 7.273397,10.860479
+ 6.7243316,9.2339099 7.5945855,7.0307729 c 0,0 1.3436876,-0.4302157
+ 4.4003805,1.6403205 1.275914,-0.3545842 2.64514,-0.5323675 4.005525,-0.5382608
+ 1.358421,0.00589 2.727647,0.1836766 4.005525,0.5382608 3.054729,-2.0705362
+ 4.39547,-1.6403205 4.39547,-1.6403205 0.8732,2.203137 0.324135,3.8297061
+ 0.159121,4.2343841 1.025445,1.118758 1.645231,2.546917 1.645231,4.293318
+ 0,6.146781 -3.741306,7.499309 -7.30581,7.895147 0.574603,0.49406
+ 1.086344,1.470395 1.086344,2.963381 0,2.13831 -0.01965,3.864084
+ -0.01965,4.388594 0,0.428251 0.287793,0.926241 1.100095,0.770067
+ C 27.419872,29.455034 32,23.462462 32,16.395333 32,7.5582293 24.83563,0.39484182
+ 15.998527,0.39484182" style="fill:#1b1817;fill-opacity:1;fill-rule:evenodd;stroke:none" />
+</g>
+</svg>
+asapi/lv
+</a>
+</div>
+<p>
+<img alt="API level 26" src="https://img.shields.io/badge/API-26-lightgray.svg">
+Android O
+<small>[2017]</small>
+<p>
+<img alt="API level 25" src="https://img.shields.io/badge/API-25-green.svg">
+Android 7.1.1 Nougat
+<small>[2016]</small>
+<p>
+<img alt="API level 24" src="https://img.shields.io/badge/API-24-green.svg">
+Android 7.0 Nougat
+<small>[2016]</small>
+<p>
+<img alt="API level 23" src="https://img.shields.io/badge/API-23-green.svg">
+Android 6.0 Marshmallow
+<small>[2015]</small>
+<p>
+<img alt="API level 22" src="https://img.shields.io/badge/API-22-green.svg">
+Android 5.1 Lollipops
+<small>[2015]</small>
+<p>
+<img alt="API level 21" src="https://img.shields.io/badge/API-21-green.svg">
+Android 5.0 Lollipop
+<small>[2014]</small>
+<p>
+<img alt="API level 20" src="https://img.shields.io/badge/API-20-green.svg">
+Android 4.4 KitKat Wear
+<small>[2014]</small>
+<p>
+<img alt="API level 19" src="https://img.shields.io/badge/API-19-green.svg">
+Android 4.4 KitKat
+<small>[2013]</small>
+<p>
+<img alt="API level 18" src="https://img.shields.io/badge/API-18-green.svg">
+Android 4.3 Jelly Bean
+<small>[2013]</small>
+<p>
+<img alt="API level 17" src="https://img.shields.io/badge/API-17-green.svg">
+Android 4.2 Jelly Bean
+<small>[2012]</small>
+<p>
+<img alt="API level 16" src="https://img.shields.io/badge/API-16-green.svg">
+Android 4.1 Jelly Bean
+<small>[2012]</small>
+<p>
+<img alt="API level 15" src="https://img.shields.io/badge/API-15-green.svg">
+Android 4.0.3 Ice Cream Sandwich
+<small>[2011]</small>
+<p>
+<img alt="API level 14" src="https://img.shields.io/badge/API-14-yellow.svg">
+Android 4.0 Ice Cream Sandwich
+<small>[2011]</small>
+<p>
+<img alt="API level 13" src="https://img.shields.io/badge/API-13-yellow.svg">
+Android 3.2 Honeycomb
+<small>[2011]</small>
+<p>
+<img alt="API level 12" src="https://img.shields.io/badge/API-12-yellow.svg">
+Android 3.1 Honeycomb
+<small>[2011]</small>
+<p>
+<img alt="API level 11" src="https://img.shields.io/badge/API-11-yellow.svg">
+Android 3.0 Honeycomb
+<small>[2011]</small>
+<p>
+<img alt="API level 10" src="https://img.shields.io/badge/API-10-yellow.svg">
+Android 2.3.3 Gingerbread
+<small>[2011]</small>
+<p>
+<img alt="API level 9" src="https://img.shields.io/badge/API-9-red.svg">
+Android 2.3 Gingerbread
+<small>[2010]</small>
+<p>
+<img alt="API level 8" src="https://img.shields.io/badge/API-8-red.svg">
+Android 2.2 Froyo
+<small>[2010]</small>
+<p>
+<img alt="API level 7" src="https://img.shields.io/badge/API-7-red.svg">
+Android 2.1 Eclair
+<small>[2010]</small>
+<p>
+<img alt="API level 6" src="https://img.shields.io/badge/API-6-red.svg">
+Android 2.0.1 Eclair
+<small>[2009]</small>
+<p>
+<img alt="API level 5" src="https://img.shields.io/badge/API-5-red.svg">
+Android 2.0 Eclair
+<small>[2009]</small>
+<p>
+<img alt="API level 4" src="https://img.shields.io/badge/API-4-red.svg">
+Android 1.6 Donut
+<small>[2009]</small>
+<p>
+<img alt="API level 3" src="https://img.shields.io/badge/API-3-red.svg">
+Android 1.5 Cupcake
+<small>[2009]</small>
+<p>
+<img alt="API level 2" src="https://img.shields.io/badge/API-2-red.svg">
+Android 1.1
+<small>[2009]</small>
+<p>
+<img alt="API level 1" src="https://img.shields.io/badge/API-1-red.svg">
+Android 1.0
+<small>[2008]</small>
+<hr>
+<p style="text-align:right">
+<small>&copy; 2017 &emsp; tynn &emsp; &hearts; Berlin</small>
+</div>
