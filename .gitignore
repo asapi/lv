@@ -1,0 +1,8 @@
+/_build
+/cover
+/deps
+/doc
+/bin/.gradle/
+/bin/build/
+erl_crash.dump
+*.ez
