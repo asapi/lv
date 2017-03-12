@@ -14,8 +14,22 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-defmodule Asapi.Lv do
+defmodule Ext.Gradle do
+  import Ext
+
   def of?(artifact) do
-    Ext.Gradle.of? artifact
+    version levels manifest artifact
+  end
+
+  defp manifest(artifact) do
+    args = ["-Partifact=" <> artifact, "-bbin/manifest.gradle", "-q"]
+    {manifest, 0} = System.cmd "gradle", args, stderr_to_stdout: true
+    manifest
+  end
+
+  defp levels(manifest) do
+    min_sdk = version Regex.run ~R/android:minSdkVersion="([0-9]+)"/, manifest
+    max_sdk = version Regex.run ~R/android:maxSdkVersion="([0-9]+)"/, manifest
+    {min_sdk, max_sdk}
   end
 end
