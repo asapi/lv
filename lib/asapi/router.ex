@@ -78,7 +78,9 @@ defmodule Asapi.Router do
       path -> path
     end
     api = asapi_lv? lib
-    render_template "asapi.html.eex", [host: conn.host, path: path, lib: lib, api: api]
+    unknown = unknown() <> ".svg"
+    args = [host: conn.host, path: path, lib: lib, api: api, unknown: unknown]
+    render_template "asapi.html.eex", args
   end
 
   defp asapi_lv?(lib) do

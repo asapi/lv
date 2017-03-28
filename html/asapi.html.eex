@@ -34,37 +34,40 @@ ul > li { padding: 2px 0; }
 <input type="submit" value="Search">
 <script type="text/javascript">
 history.replaceState("<%= @lib %>", "Android SDK API level - <%= @lib %>", "")
-function updateImgAlt(img) {
+function updateImgAlt(img, path) {
   if (this.readyState == 4) {
     var api = this.status == 200 ? this.responseText : "unknown"
     img.alt = "API level " + api
+    img.src = path + "/api.svg"
   }
 }
 function loadApiLevelText(img, path) {
   var xhttp = new XMLHttpRequest()
-  xhttp.onreadystatechange = updateImgAlt.bind(xhttp, img)
+  xhttp.onreadystatechange = updateImgAlt.bind(xhttp, img, path)
   xhttp.open("GET", path + "/api.txt", true)
   xhttp.send()
 }
 function updatePage(library) {
   document.title = "Android API level - " + library
-  path = library.replace(/:/g, "/")
+  var path = library.replace(/:/g, "/")
   if (path.endsWith("/")) path = path.substring(0, path.length-1)
   if (path.endsWith("/+")) path = path.substring(0, path.length-2)
   if (!path.startsWith("/")) path = "/" + path
-  badge = path + "/api.svg"
-  document.getElementById("url").innerText = "<%= @host %>" + badge
-  a = document.getElementById("badge")
+  var badge = path + "/api.svg"
+  document.getElementById("url").innerText = "<%= @host %>" + path + "/api.svg"
+  var a = document.getElementById("badge")
   a.href = path
-  a.firstElementChild.src = badge
-  loadApiLevelText(a.firstElementChild, path)
+  var img = a.firstElementChild
+  img.src = "<%= @unknown %>"
+  img.alt = "API level unknown"
+  loadApiLevelText(img, path)
   return path
 }
 window.onpopstate = function(e) {
   updatePage(e.state)
 }
 document.forms[0].onsubmit = function(e) {
-  library = document.forms[0][0].value
+  var library = document.forms[0][0].value
   history.pushState(library, document.title, updatePage(library))
   return false
 }
