@@ -78,8 +78,8 @@ defmodule Asapi.Router do
       path -> path
     end
     api = asapi_lv? lib
-    unknown = unknown() <> ".svg"
-    args = [host: conn.host, path: path, lib: lib, api: api, unknown: unknown]
+    loading = shield("…") <> ".svg"
+    args = [host: conn.host, path: path, lib: lib, api: api, loading: loading]
     render_template "asapi.html.eex", args
   end
 
@@ -91,6 +91,10 @@ defmodule Asapi.Router do
     end
   end
 
+  defp shield(notice) when notice in ["…", "unknown"] do
+    "#{@shields}/#{@label}-#{encode notice}-lightgrey"
+  end
+
   defp shield(api) do
     "#{@shields}/#{@label}-#{encode api}-#{@color}"
   end
@@ -99,18 +103,7 @@ defmodule Asapi.Router do
     URI.encode part, &URI.char_unreserved?/1
   end
 
-  defp unknown() do
-    "#{@shields}/#{@label}-unknown-lightgrey"
-  end
-
-  defp shields_uri(lib) do
-    case asapi_lv? lib do
-      "unknown" -> unknown
-      api -> shield api
-    end
-  end
-
   defp badge?(lib, type) do
-    {:redirect, shields_uri(lib) <> "." <> to_string type}
+    {:redirect, shield(asapi_lv? lib) <> "." <> to_string(type)}
   end
 end

@@ -59,8 +59,8 @@ function updatePage(library) {
   var a = document.getElementById("badge")
   a.href = path
   var img = a.firstElementChild
-  img.src = "<%= @unknown %>"
-  img.alt = "API level unknown"
+  img.src = "<%= @loading %>"
+  img.alt = "API level loading"
   loadApiLevelText(img, path)
   return path
 }
