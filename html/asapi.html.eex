@@ -25,10 +25,14 @@ input[type="search"] { flex-grow: 1; }
 p > img { vertical-align: top; }
 ul {list-style-type: none; padding: 0; }
 ul > li { padding: 2px 0; }
+@media(orientation: portrait) {
+div.wrap { display: flex; flex-wrap: wrap; justify-content: flex-end; }
+div.wrap > * { margin: 0 12px; }
+}
 </style>
 <title>Android SDK API level - <%= @lib %></title>
 <div style="margin:auto;max-width:678px;padding:8px">
-<h2 style="text-align:center">Android SDK API level of @aar artifacts</h2>
+<h2 style="text-align:center">Android SDK API level of <code>@aar</code> artifacts</h2>
 <hr>
 <form method="get" style="display:flex">
 <input type="search" name="library" placeholder="groupId:artifactId:version" value="<%= @lib %>">
@@ -188,13 +192,16 @@ Android 1.1
 Android 1.0
 <small>[2008]</small>
 </div>
-<div style="text-align:right">
+<div class="wrap" style="text-align:right">
+<div>
 <h4>Repositories</h4>
 <ul>
 <li><a href="https://search.maven.org/">Maven Central</a>
 <li><a href="https://bintray.com/bintray/jcenter">JCenter</a>
 <li><a href="https://jitpack.io/">JitPack</a>
 </ul>
+</div>
+<div>
 <h4>References</h4>
 <ul>
 <li><a href="https://shields.io/#your-badge">shields.io</a>
@@ -202,6 +209,8 @@ Android 1.0
 <li><a href="https://android-arsenal.com/api">Versions</a>
 <li><a href="https://daringfireball.net/projects/markdown/syntax#img">Markdown</a>
 </ul>
+</div>
+<div>
 <h4>Contribute</h4>
 <a href="https://github.com/asapi/lv">
 <svg width="1.1em" height="1.1em" viewbox="0 0 32 32" style="vertical-align:top">
@@ -231,6 +240,7 @@ Android 1.0
 </svg>
 asapi/lv
 </a>
+</div>
 </div>
 </div>
 <hr>
