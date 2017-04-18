@@ -20,12 +20,14 @@
 <!-- knowitall knowitnow nevermind -->
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <style type="text/css">
+div#info { display:flex; }
 hr { border: none; border-top: 2px dashed lightgray; margin: 24px 12px; }
 input[type="search"] { flex-grow: 1; }
 p > img { vertical-align: top; }
 ul {list-style-type: none; padding: 0; }
 ul > li { padding: 2px 0; }
 @media(orientation: portrait) {
+div#info { display: block; }
 div.wrap { display: flex; flex-wrap: wrap; justify-content: flex-end; }
 div.wrap > * { margin: 0 12px; }
 }
@@ -85,7 +87,7 @@ document.forms[0].onsubmit = function(e) {
 <img alt="API level <%= @api %>" src="<%= @path %>/api.svg">
 </a>
 <hr>
-<div style="display:flex;justify-content:flex-end;flex-wrap:wrap">
+<div id="info" style="justify-content:flex-end;flex-wrap:wrap;">
 <div style="flex-grow:1">
 <h4 style="margin-top:0">Android version history</h4>
 <img alt="API level 26" src="https://img.shields.io/badge/API-26-lightgray.svg">
