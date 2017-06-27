@@ -15,6 +15,7 @@
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 defmodule Asapi.Router do
+  require Logger
   use Trot.Router
   use Trot.Template
   @template_root "html"
@@ -86,8 +87,9 @@ defmodule Asapi.Router do
   defp asapi_lv?(lib) do
     try do
       Asapi.Lv.of? Asapi.aar lib
-    rescue
-      _ -> "unknown"
+    rescue error ->
+      Logger.warn Exception.message error
+      "unknown"
     end
   end
 

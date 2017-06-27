@@ -23,8 +23,10 @@ defmodule Ext.Gradle do
 
   defp manifest(artifact) do
     args = ["-Partifact=" <> artifact, "-bbin/manifest.gradle", "-q"]
-    {manifest, 0} = System.cmd "gradle", args, stderr_to_stdout: true
-    manifest
+    case System.cmd "gradle", args, stderr_to_stdout: true do
+      {manifest, 0} -> manifest
+      {error, code} -> raise "#{code} #{error}"
+    end
   end
 
   defp levels(manifest) do
