@@ -25,19 +25,19 @@ defmodule Asapi.Router do
   @color "blue"
 
   get "/:path/api.png" do
-    badge? path, :png
+    badge path, :png
   end
 
   get "/:path/api.svg" do
-    badge? path, :svg
+    badge path, :svg
   end
 
   get "/:path/api.txt" do
-    asapi_lv? path
+    asapi_lv_of path
   end
 
   get "/:group/:artifact" do
-    asapi_lv! library(group, artifact), conn
+    asapi_lv library(group, artifact), conn
   end
 
   get "/:group/:artifact/+" do
@@ -45,23 +45,23 @@ defmodule Asapi.Router do
   end
 
   get "/:group/:artifact/api.png" do
-    badge? library(group, artifact), :png
+    badge library(group, artifact), :png
   end
 
   get "/:group/:artifact/api.svg" do
-    badge? library(group, artifact), :svg
+    badge library(group, artifact), :svg
   end
 
   get "/:group/:artifact/api.txt" do
-    asapi_lv? library group, artifact
+    asapi_lv_of library group, artifact
   end
 
   get "/*path" do
     case Enum.reverse(path) do
-      ["api.png" | path] -> badge? library(Enum.reverse(path)), :png
-      ["api.svg" | path] -> badge? library(Enum.reverse(path)), :svg
-      ["api.txt" | path] -> asapi_lv? library Enum.reverse path
-      _ -> asapi_lv! library(path), conn
+      ["api.png" | path] -> badge library(Enum.reverse(path)), :png
+      ["api.svg" | path] -> badge library(Enum.reverse(path)), :svg
+      ["api.txt" | path] -> asapi_lv_of library Enum.reverse path
+      _ -> asapi_lv library(path), conn
     end
   end
 
@@ -73,20 +73,20 @@ defmodule Asapi.Router do
     group <> ":" <> artifact <> ":+"
   end
 
-  defp asapi_lv!(lib, conn) do
+  defp asapi_lv(lib, conn) do
     path = case conn.request_path do
       "/" -> ""
       path -> path
     end
-    api = asapi_lv? lib
+    api = asapi_lv_of lib
     loading = shield("…") <> ".svg"
     args = [host: conn.host, path: path, lib: lib, api: api, loading: loading]
     render_template "asapi.html.eex", args
   end
 
-  defp asapi_lv?(lib) do
+  defp asapi_lv_of(lib) do
     try do
-      Asapi.Lv.of? Asapi.aar lib
+      Asapi.Lv.of! Asapi.aar lib
     rescue error ->
       Logger.warn Exception.message error
       "unknown"
@@ -105,7 +105,7 @@ defmodule Asapi.Router do
     URI.encode part, &URI.char_unreserved?/1
   end
 
-  defp badge?(lib, type) do
-    {:redirect, shield(asapi_lv? lib) <> "." <> to_string(type)}
+  defp badge(lib, type) do
+    {:redirect, shield(asapi_lv_of lib) <> "." <> to_string(type)}
   end
 end

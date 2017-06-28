@@ -17,7 +17,7 @@
 defmodule Ext.Gradle do
   import Ext
 
-  def of?(artifact) do
+  def of!(artifact) do
     version levels manifest artifact
   end
 

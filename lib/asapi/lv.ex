@@ -15,7 +15,7 @@
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 defmodule Asapi.Lv do
-  def of?(artifact) do
-    Ext.Gradle.of? artifact
+  def of!(artifact) do
+    Ext.Gradle.of! artifact
   end
 end
