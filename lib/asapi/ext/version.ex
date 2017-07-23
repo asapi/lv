@@ -14,21 +14,10 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-defmodule Ext do
-  def version(nil) do
-    nil
-  end
+defmodule Asapi.Ext.Version do
+  alias Asapi.Ext.Gradle
 
-  def version([_, version]) do
-    elem Integer.parse(version), 0
-  end
-
-  def version(versions) do
-    case versions do
-      {nil, nil} -> "1+"
-      {min_sdk, nil} -> to_string(min_sdk) <> "+"
-      {nil, max_sdk} -> "1-" <> to_string(max_sdk)
-      {min_sdk, max_sdk} -> to_string(min_sdk) <> "-" <> to_string(max_sdk)
-    end
+  def of!(artifact) do
+    Gradle.of! artifact
   end
 end

@@ -15,10 +15,9 @@
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 defmodule Asapi.Router do
-  require Logger
   use Trot.Router
   use Trot.Template
-  @template_root "html"
+  @template_root "priv/temp"
 
   @shields "https://img.shields.io/badge"
   @label "API"
@@ -85,11 +84,9 @@ defmodule Asapi.Router do
   end
 
   defp asapi_lv_of(lib) do
-    try do
-      Asapi.Lv.of! Asapi.aar lib
-    rescue error ->
-      Logger.warn Exception.message error
-      "unknown"
+    case Asapi.Lv.of Asapi.aar lib do
+      nil -> "unknown"
+      lv -> lv
     end
   end
 
@@ -108,4 +105,6 @@ defmodule Asapi.Router do
   defp badge(lib, type) do
     {:redirect, shield(asapi_lv_of lib) <> "." <> to_string(type)}
   end
+
+  import_routes Trot.NotFound
 end
