@@ -16,13 +16,15 @@
 
 defmodule Asapi.Library do
   @behaviour Plug
-  import Plug.Conn
-  import Trot.Router
+  import Plug.Conn, only: [fetch_query_params: 1]
+  import Trot.Router, only: [do_redirect: 2]
 
   def init(opts), do: opts
 
   def call(%Plug.Conn{} = conn, _) do
-    conn |> fetch_query_params |> map_library
+    conn
+    |> fetch_query_params
+    |> map_library
   end
 
   defp map_library(%Plug.Conn{query_params: %{"library" => lib}} = conn) do

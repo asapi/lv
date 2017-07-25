@@ -99,7 +99,9 @@ defmodule Asapi.Router do
   end
 
   defp encode(part) do
-    URI.encode part, &URI.char_unreserved?/1
+    part
+    |> String.replace("-", "--")
+    |> URI.encode(&URI.char_unreserved?/1)
   end
 
   defp badge(lib, type) do
