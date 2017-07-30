@@ -14,24 +14,24 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-defmodule Asapi.Ext.Gradle do
-  import Asapi, only: [version: 1]
+defmodule Asapi.Ext.Supervisor do
+  @second 1000
+  @minute 60 * @second
+  @hour 60 * @minute
 
-  def of!(artifact) do
-    version levels manifest artifact
+  def start_link do
+    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
   end
 
-  defp manifest(artifact) do
-    args = ["-Partifact=" <> artifact, "-bbin/manifest.gradle", "-q"]
-    case System.cmd "gradle", args, stderr_to_stdout: true do
-      {manifest, 0} -> manifest
-      {error, code} -> raise "#{code} #{error}"
-    end
-  end
-
-  defp levels(manifest) do
-    min_sdk = version Regex.run ~R/android:minSdkVersion="([0-9]+)"/, manifest
-    max_sdk = version Regex.run ~R/android:maxSdkVersion="([0-9]+)"/, manifest
-    {min_sdk, max_sdk}
+  def init(_arg) do
+    import Supervisor.Spec
+    children = [
+      worker(Cachex, [:lvc, [
+        ode: true,
+        default_ttl: 2 * @hour,
+        ttl_interval: -1
+      ]])
+    ]
+    supervise(children, strategy: :one_for_one)
   end
 end

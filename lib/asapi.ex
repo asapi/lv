@@ -18,4 +18,21 @@ defmodule Asapi do
   def aar(artifact) do
     String.replace String.trim(artifact <> "@aar"), ~R/@.*$/, "@aar"
   end
+
+  def version(nil) do
+    nil
+  end
+
+  def version([_, version]) do
+    elem Integer.parse(version), 0
+  end
+
+  def version(versions) do
+    case versions do
+      {nil, nil} -> "1+"
+      {min_sdk, nil} -> to_string(min_sdk) <> "+"
+      {nil, max_sdk} -> "1-" <> to_string(max_sdk)
+      {min_sdk, max_sdk} -> to_string(min_sdk) <> "-" <> to_string(max_sdk)
+    end
+  end
 end

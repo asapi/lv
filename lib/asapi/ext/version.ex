@@ -18,6 +18,6 @@ defmodule Asapi.Ext.Version do
   alias Asapi.Ext.Gradle
 
   def of!(artifact) do
-    Gradle.of! artifact
+    Cachex.get! :lvc, artifact, [ fallback: &Gradle.of!/1 ]
   end
 end
