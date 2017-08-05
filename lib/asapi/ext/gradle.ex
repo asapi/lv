@@ -15,10 +15,11 @@
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 defmodule Asapi.Ext.Gradle do
-  import Asapi, only: [version: 1]
-
   def of!(artifact) do
-    version levels manifest artifact
+    artifact
+    |> manifest
+    |> levels
+    |> version
   end
 
   defp manifest(artifact) do
@@ -33,5 +34,23 @@ defmodule Asapi.Ext.Gradle do
     min_sdk = version Regex.run ~R/android:minSdkVersion="([0-9]+)"/, manifest
     max_sdk = version Regex.run ~R/android:maxSdkVersion="([0-9]+)"/, manifest
     {min_sdk, max_sdk}
+  end
+
+  defp version(nil) do
+    nil
+  end
+
+  defp version([_, version]) do
+    elem Integer.parse(version), 0
+  end
+
+  defp version(versions) do
+    case versions do
+      {nil, nil} -> "1+"
+      {sdk, sdk} -> to_string sdk
+      {min_sdk, nil} -> "#{min_sdk}+"
+      {nil, max_sdk} -> "1-#{max_sdk}"
+      {min_sdk, max_sdk} -> "#{min_sdk}-#{max_sdk}"
+    end
   end
 end

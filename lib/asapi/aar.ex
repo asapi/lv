@@ -14,31 +14,38 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-defmodule Asapi do
-  @shields "https://img.shields.io/badge"
-  @label "API"
-  @color "blue"
+defmodule Asapi.Aar do
+  alias Asapi.Aar
+  require Logger
 
-  @loading "…"
-  @unknown "unknown"
+  @enforce_keys [:group, :name]
+  defstruct [:group, :name, :version, :classifier]
 
-  def shield(status) when status in [@loading, @unknown] do
-    "#{@shields}/#{@label}-#{encode status}-lightgrey"
+  def resolve(%Aar{} = aar) do
+    aar
   end
 
-  def shield(status) do
-    "#{@shields}/#{@label}-#{encode status}-#{@color}"
+  def artifact(%Aar{group: nil}) do
+    nil
   end
 
-  defp encode(part) do
-    String.replace(part, "-", "--")
-    |> URI.encode(&URI.char_unreserved?/1)
+  def artifact(%Aar{name: nil}) do
+    nil
   end
 
-  defmacro __using__(_) do
-    quote do
-      @loading unquote(@loading)
-      @unknown unquote(@unknown)
-    end
+  def artifact(%Aar{version: nil, classifier: nil} = aar) do
+    "#{aar.group}:#{aar.name}:+"
+  end
+
+  def artifact(%Aar{version: nil} = aar) do
+    "#{aar.group}:#{aar.name}:+:#{aar.classifier}"
+  end
+
+  def artifact(%Aar{classifier: nil} = aar) do
+    "#{aar.group}:#{aar.name}:#{aar.version}"
+  end
+
+  def artifact(%Aar{} = aar) do
+    "#{aar.group}:#{aar.name}:#{aar.version}:#{aar.classifier}"
   end
 end

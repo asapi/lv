@@ -15,10 +15,37 @@
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 defmodule Asapi.Lv do
-  require Logger
+  alias Asapi.Aar
   alias Asapi.Ext.Version
+  require Logger
+  use Asapi
 
-  def of(artifact) do
+  def api_lv(%Aar{group: nil}) do
+    @unknown
+  end
+
+  def api_lv(%Aar{name: nil}) do
+    @unknown
+  end
+
+  def api_lv(%Aar{} = aar) do
+    aar
+    |> Aar.resolve
+    |> Aar.artifact
+    |> aar_suffix
+    |> String.replace(~R/@.*$/, "@aar")
+    |> version_of
+    |> case do
+      nil -> @unknown
+      lv -> lv
+    end
+  end
+
+  defp aar_suffix(var) do
+    "#{String.trim var}@aar"
+  end
+
+  defp version_of(artifact) do
     try do
       Version.of! artifact
     rescue error ->

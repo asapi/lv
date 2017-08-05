@@ -15,98 +15,123 @@
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 defmodule Asapi.Router do
+  alias Asapi.Aar
+  import Asapi
+  import Asapi.Lv
+  use Asapi
   use Trot.Router
   use Trot.Template
+
   @template_root "priv/temp"
 
-  @shields "https://img.shields.io/badge"
-  @label "API"
-  @color "blue"
 
-  get "/:path/api.png" do
-    badge path, :png
+  get "/:group/:name/+/api.png" do
+    {:redirect, "/#{group}/#{name}/api.png"}
   end
 
-  get "/:path/api.svg" do
-    badge path, :svg
+  get "/:g/:n/api.png" do
+    %Aar{group: g, name: n}
+    |> badge(:png)
   end
 
-  get "/:path/api.txt" do
-    asapi_lv_of path
+  get "/:g/:n/:v/api.png" do
+    %Aar{group: g, name: n, version: v}
+    |> badge(:png)
   end
 
-  get "/:group/:artifact" do
-    asapi_lv library(group, artifact), conn
+  get "/:g/:n/:v/:c/api.png" do
+    %Aar{group: g, name: n, version: v, classifier: c}
+    |> badge(:png)
   end
 
-  get "/:group/:artifact/+" do
-    {:redirect, "/#{group}/#{artifact}"}
+
+  get "/:group/:name/+/api.svg" do
+    {:redirect, "/#{group}/#{name}/api.svg"}
   end
 
-  get "/:group/:artifact/api.png" do
-    badge library(group, artifact), :png
+  get "/:g/:n/api.svg" do
+    %Aar{group: g, name: n}
+    |> badge(:svg)
   end
 
-  get "/:group/:artifact/api.svg" do
-    badge library(group, artifact), :svg
+  get "/:g/:n/:v/api.svg" do
+    %Aar{group: g, name: n, version: v}
+    |> badge(:svg)
   end
 
-  get "/:group/:artifact/api.txt" do
-    asapi_lv_of library group, artifact
+  get "/:g/:n/:v/:c/api.svg" do
+    %Aar{group: g, name: n, version: v, classifier: c}
+    |> badge(:svg)
   end
+
+
+  get "/:group/:name/+/api.txt" do
+    {:redirect, "/#{group}/#{name}/api.txt"}
+  end
+
+  get "/:g/:n/api.txt" do
+    %Aar{group: g, name: n}
+    |> api_lv
+  end
+
+  get "/:g/:n/:v/api.txt" do
+    %Aar{group: g, name: n, version: v}
+    |> api_lv
+  end
+
+  get "/:g/:n/:v/:c/api.txt" do
+    %Aar{group: g, name: n, version: v, classifier: c}
+    |> api_lv
+  end
+
+
+  get "/:group/:name/+" do
+    {:redirect, "/#{group}/#{name}"}
+  end
+
+  get "/:g/:n" do
+    %Aar{group: g, name: n}
+    |> asapi_lv(conn)
+  end
+
+  get "/:g/:n/:v" do
+    %Aar{group: g, name: n, version: v}
+    |> asapi_lv(conn)
+  end
+
+  get "/:g/:n/:v/:c" do
+    %Aar{group: g, name: n, version: v, classifier: c}
+    |> asapi_lv(conn)
+  end
+
 
   get "/*path" do
+    no_aar = %Aar{group: nil, name: nil}
     case Enum.reverse(path) do
-      ["api.png" | path] -> badge library(Enum.reverse(path)), :png
-      ["api.svg" | path] -> badge library(Enum.reverse(path)), :svg
-      ["api.txt" | path] -> asapi_lv_of library Enum.reverse path
-      _ -> asapi_lv library(path), conn
+      ["api.png" | _] -> badge no_aar, :png
+      ["api.svg" | _] -> badge no_aar, :svg
+      ["api.txt" | _] -> api_lv no_aar
+      _ -> asapi_lv no_aar, conn
     end
   end
 
-  defp library(path) do
-    Enum.join(path, ":")
-  end
+  import_routes Trot.NotFound
 
-  defp library(group, artifact) do
-    group <> ":" <> artifact <> ":+"
-  end
 
-  defp asapi_lv(lib, conn) do
+  defp asapi_lv(%Aar{} = aar, conn) do
     path = case conn.request_path do
       "/" -> ""
       path -> path
     end
-    api = asapi_lv_of lib
-    loading = shield("…") <> ".svg"
-    args = [host: conn.host, path: path, lib: lib, api: api, loading: loading]
-    render_template "asapi.html.eex", args
+    render_template "asapi.html.eex",
+      host: conn.host,
+      path: path,
+      lib: Aar.artifact(aar),
+      api: api_lv(aar),
+      loading: "#{shield(@loading)}.svg"
   end
 
-  defp asapi_lv_of(lib) do
-    case Asapi.Lv.of Asapi.aar lib do
-      nil -> "unknown"
-      lv -> lv
-    end
+  defp badge(%Aar{} = aar, type) do
+    {:redirect, "#{shield(api_lv aar)}.#{type}"}
   end
-
-  defp shield(notice) when notice in ["…", "unknown"] do
-    "#{@shields}/#{@label}-#{encode notice}-lightgrey"
-  end
-
-  defp shield(api) do
-    "#{@shields}/#{@label}-#{encode api}-#{@color}"
-  end
-
-  defp encode(part) do
-    part
-    |> String.replace("-", "--")
-    |> URI.encode(&URI.char_unreserved?/1)
-  end
-
-  defp badge(lib, type) do
-    {:redirect, shield(asapi_lv_of lib) <> "." <> to_string(type)}
-  end
-
-  import_routes Trot.NotFound
 end
