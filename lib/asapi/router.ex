@@ -35,12 +35,12 @@ defmodule Asapi.Router do
   end
 
   get "/:g/:n/:v/api.png" do
-    %Aar{group: g, name: n, version: v}
+    %Aar{group: g, name: n, revision: v}
     |> badge(:png)
   end
 
   get "/:g/:n/:v/:c/api.png" do
-    %Aar{group: g, name: n, version: v, classifier: c}
+    %Aar{group: g, name: n, revision: v, classifier: c}
     |> badge(:png)
   end
 
@@ -55,12 +55,12 @@ defmodule Asapi.Router do
   end
 
   get "/:g/:n/:v/api.svg" do
-    %Aar{group: g, name: n, version: v}
+    %Aar{group: g, name: n, revision: v}
     |> badge(:svg)
   end
 
   get "/:g/:n/:v/:c/api.svg" do
-    %Aar{group: g, name: n, version: v, classifier: c}
+    %Aar{group: g, name: n, revision: v, classifier: c}
     |> badge(:svg)
   end
 
@@ -75,12 +75,12 @@ defmodule Asapi.Router do
   end
 
   get "/:g/:n/:v/api.txt" do
-    %Aar{group: g, name: n, version: v}
+    %Aar{group: g, name: n, revision: v}
     |> api_lv
   end
 
   get "/:g/:n/:v/:c/api.txt" do
-    %Aar{group: g, name: n, version: v, classifier: c}
+    %Aar{group: g, name: n, revision: v, classifier: c}
     |> api_lv
   end
 
@@ -95,12 +95,12 @@ defmodule Asapi.Router do
   end
 
   get "/:g/:n/:v" do
-    %Aar{group: g, name: n, version: v}
+    %Aar{group: g, name: n, revision: v}
     |> asapi_lv(conn)
   end
 
   get "/:g/:n/:v/:c" do
-    %Aar{group: g, name: n, version: v, classifier: c}
+    %Aar{group: g, name: n, revision: v, classifier: c}
     |> asapi_lv(conn)
   end
 
@@ -126,7 +126,7 @@ defmodule Asapi.Router do
     render_template "asapi.html.eex",
       host: conn.host,
       path: path,
-      lib: Aar.artifact(aar),
+      lib: to_string(aar),
       api: api_lv(aar),
       loading: "#{shield(@loading)}.svg"
   end

@@ -15,9 +15,40 @@
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 defmodule Asapi.Ext.Version do
-  alias Asapi.Ext.Gradle
+  alias Asapi.Ext.Version
 
-  def of!(artifact) do
-    Cachex.get! :lvc, artifact, [ fallback: &Gradle.of!/1 ]
+  defstruct major: 0, minor: 0, rev: 0, s: nil
+
+  def parse!(%Version{} = version) do
+    version
+  end
+
+  def parse!(nil) do
+    %Version{}
+  end
+
+  def parse!(v) do
+    String.split(v, ".")
+    |> Enum.map(&Integer.parse/1)
+    |> Enum.map(&elem(&1, 0))
+    |> case do
+      [maj, min, rev] -> %Version{major: maj, minor: min, rev: rev, s: v}
+      [maj, min] -> %Version{major: maj, minor: min, s: v}
+      [maj] -> %Version{major: maj, s: v}
+      _ -> %Version{s: v}
+    end
+  end
+
+  def matching?(pattern, v) do
+    String.starts_with?(v.s, pattern)
+  end
+
+  def v1 <= v2 do
+    cond do
+      v1.major != v2.major -> v1.major < v2.major
+      v1.minor != v2.minor -> v1.minor < v2.minor
+      v1.rev != v2.rev -> v1.rev < v2.rev
+      true -> true
+    end
   end
 end

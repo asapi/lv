@@ -15,9 +15,6 @@
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 defmodule Asapi.Ext.Supervisor do
-  @second 1000
-  @minute 60 * @second
-  @hour 60 * @minute
 
   def start_link do
     Supervisor.start_link(__MODULE__, [], name: __MODULE__)
@@ -28,7 +25,7 @@ defmodule Asapi.Ext.Supervisor do
     children = [
       worker(Cachex, [:lvc, [
         ode: true,
-        default_ttl: 2 * @hour,
+        default_ttl: :timer.hours(2),
         ttl_interval: -1
       ]])
     ]

@@ -14,24 +14,36 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-defmodule Asapi.Library do
-  @behaviour Plug
-  import Plug.Conn, only: [fetch_query_params: 1]
-  import Trot.Router, only: [do_redirect: 2]
+defmodule Asapi.Ext.Data do
+  alias Asapi.Aar
+  alias Asapi.Ext.Repo
 
-  def init(opts), do: opts
-
-  def call(%Plug.Conn{} = conn, _) do
-    conn
-    |> fetch_query_params
-    |> map_library
+  def resolve_rev!(%Aar{} = aar) do
+    case aar.revision do
+      nil -> true
+      "" -> true
+      "latest.integration" -> true
+      "latest.milestone" -> true
+      "latest.release" -> true
+      rev -> String.ends_with?(rev, "+")
+    end
+    |> if do
+      aar_rev! aar
+    else
+      aar
+    end
   end
 
-  defp map_library(%Plug.Conn{query_params: %{"library" => lib}} = conn) do
-    do_redirect "/#{String.replace lib, ":", "/"}", conn
+  defp aar_rev!(%Aar{} = aar) do
+    rev = Cachex.get! :lvc, aar, [ fallback: &Repo.resolve/1 ]
+    %{aar | revision: rev}
   end
 
-  defp map_library(%Plug.Conn{} = conn) do
-    conn
+  def load_artifact!(%Aar{} = aar) do
+    Repo.load_artifact!(aar)
+  end
+
+  def sdk_levels!(%Aar{} = aar) do
+    Cachex.get! :lvc, aar, [ fallback: &Aar.sdk_levels!/1 ]
   end
 end

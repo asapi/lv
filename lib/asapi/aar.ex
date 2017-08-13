@@ -16,36 +16,68 @@
 
 defmodule Asapi.Aar do
   alias Asapi.Aar
+  alias Asapi.Ext.Data
   require Logger
 
+  @manifest 'AndroidManifest.xml'
+
   @enforce_keys [:group, :name]
-  defstruct [:group, :name, :version, :classifier]
+  defstruct [:group, :name, :revision, :classifier]
 
-  def resolve(%Aar{} = aar) do
-    aar
+  def resolve!(%Aar{} = aar) do
+    Data.resolve_rev!(aar)
   end
 
-  def artifact(%Aar{group: nil}) do
+  def sdk_levels!(%Aar{} = aar) do
+    Data.load_artifact!(aar)
+    |> load_manifest!
+    |> sdk_levels
+    |> case do
+      {nil, nil} -> "1+"
+      {sdk, sdk} -> to_string sdk
+      {min_sdk, nil} -> "#{min_sdk}+"
+      {nil, max_sdk} -> "1-#{max_sdk}"
+      {min_sdk, max_sdk} -> "#{min_sdk}-#{max_sdk}"
+    end
+  end
+
+  defp load_manifest!(aar_file) do
+    {:ok, aar} = :zip.zip_open(aar_file, [:memory])
+    {:ok, {@manifest, manifest}} = :zip.zip_get(@manifest, aar)
+    :ok = :zip.zip_close(aar)
+    manifest
+  end
+
+  defp sdk_levels(manifest) do
+    min_sdk = sdk_ver Regex.run ~R/android:minSdkVersion="([0-9]+)"/, manifest
+    max_sdk = sdk_ver Regex.run ~R/android:maxSdkVersion="([0-9]+)"/, manifest
+    {min_sdk, max_sdk}
+  end
+
+  defp sdk_ver(nil) do
     nil
   end
 
-  def artifact(%Aar{name: nil}) do
-    nil
+  defp sdk_ver([_, level]) do
+    String.to_integer level
   end
 
-  def artifact(%Aar{version: nil, classifier: nil} = aar) do
-    "#{aar.group}:#{aar.name}:+"
-  end
-
-  def artifact(%Aar{version: nil} = aar) do
-    "#{aar.group}:#{aar.name}:+:#{aar.classifier}"
-  end
-
-  def artifact(%Aar{classifier: nil} = aar) do
-    "#{aar.group}:#{aar.name}:#{aar.version}"
-  end
-
-  def artifact(%Aar{} = aar) do
-    "#{aar.group}:#{aar.name}:#{aar.version}:#{aar.classifier}"
+  defimpl String.Chars, for: Aar do
+    def to_string(aar) do
+      case aar do
+        %Aar{group: nil} ->
+            nil
+        %Aar{name: nil} ->
+            nil
+        %Aar{revision: nil, classifier: nil} ->
+            "#{aar.group}:#{aar.name}:+"
+        %Aar{revision: nil} ->
+            "#{aar.group}:#{aar.name}:+:#{aar.classifier}"
+        %Aar{classifier: nil} ->
+            "#{aar.group}:#{aar.name}:#{aar.revision}"
+        _ ->
+            "#{aar.group}:#{aar.name}:#{aar.revision}:#{aar.classifier}"
+      end
+    end
   end
 end

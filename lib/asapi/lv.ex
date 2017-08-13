@@ -16,7 +16,6 @@
 
 defmodule Asapi.Lv do
   alias Asapi.Aar
-  alias Asapi.Ext.Version
   require Logger
   use Asapi
 
@@ -29,28 +28,21 @@ defmodule Asapi.Lv do
   end
 
   def api_lv(%Aar{} = aar) do
-    aar
-    |> Aar.resolve
-    |> Aar.artifact
-    |> aar_suffix
-    |> String.replace(~R/@.*$/, "@aar")
-    |> version_of
-    |> case do
-      nil -> @unknown
-      lv -> lv
+    try do
+      api_lv! aar
+    rescue error ->
+      Logger.warn Exception.message error
+      @unknown
     end
   end
 
-  defp aar_suffix(var) do
-    "#{String.trim var}@aar"
-  end
-
-  defp version_of(artifact) do
-    try do
-      Version.of! artifact
-    rescue error ->
-      Logger.warn Exception.message error
-      nil
+  defp api_lv!(%Aar{} = aar) do
+    aar
+    |> Aar.resolve!
+    |> Aar.sdk_levels!
+    |> case do
+      nil -> @unknown
+      lv -> lv
     end
   end
 end
