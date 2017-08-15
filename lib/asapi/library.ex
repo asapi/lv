@@ -24,14 +24,11 @@ defmodule Asapi.Library do
   def call(%Plug.Conn{} = conn, _) do
     conn
     |> fetch_query_params
-    |> map_library
-  end
-
-  defp map_library(%Plug.Conn{query_params: %{"library" => lib}} = conn) do
-    do_redirect "/#{String.replace lib, ":", "/"}", conn
-  end
-
-  defp map_library(%Plug.Conn{} = conn) do
-    conn
+    |> case do
+      %Plug.Conn{query_params: %{"library" => lib}} = conn ->
+          do_redirect "/#{String.replace lib, ":", "/"}", conn
+      %Plug.Conn{} = conn ->
+          conn
+    end
   end
 end

@@ -17,7 +17,6 @@
 defmodule Asapi.Aar do
   alias Asapi.Aar
   alias Asapi.Ext.Data
-  require Logger
 
   @manifest 'AndroidManifest.xml'
 
