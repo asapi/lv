@@ -29,6 +29,11 @@ defmodule Asapi.Router do
     {:redirect, "/#{group}/#{name}/api.png"}
   end
 
+  get "/:g/api.png" do
+    %Aar{group: g, name: nil}
+    |> badge(:png)
+  end
+
   get "/:g/:n/api.png" do
     %Aar{group: g, name: n}
     |> badge(:png)
@@ -49,6 +54,11 @@ defmodule Asapi.Router do
     {:redirect, "/#{group}/#{name}/api.svg"}
   end
 
+  get "/:g/api.svg" do
+    %Aar{group: g, name: nil}
+    |> badge(:svg)
+  end
+
   get "/:g/:n/api.svg" do
     %Aar{group: g, name: n}
     |> badge(:svg)
@@ -67,6 +77,11 @@ defmodule Asapi.Router do
 
   get "/:group/:name/+/api.txt" do
     {:redirect, "/#{group}/#{name}/api.txt"}
+  end
+
+  get "/:g/api.txt" do
+    %Aar{group: g, name: nil}
+    |> api_lv
   end
 
   get "/:g/:n/api.txt" do
