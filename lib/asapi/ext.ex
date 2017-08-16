@@ -18,6 +18,18 @@ defmodule Asapi.Ext do
   use Application
 
   def start(_type, _args) do
-    Asapi.Ext.Supervisor.start_link
+    Supervisor.start_link(__MODULE__, [], name: __MODULE__)
+  end
+
+  def init(_arg) do
+    import Supervisor.Spec
+    children = [
+      worker(Cachex, [:lvc, [
+        ode: true,
+        default_ttl: :timer.hours(2),
+        ttl_interval: -1
+      ]])
+    ]
+    supervise(children, strategy: :one_for_one)
   end
 end

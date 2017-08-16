@@ -18,8 +18,20 @@ defmodule Asapi.Ext.Data do
   alias Asapi.Aar
   alias Asapi.Ext.Repo
 
-  def resolve_rev!(%Aar{} = aar) do
-    case aar.revision do
+  def sdk_levels!(%Aar{} = aar) do
+    aar = resolve_revision aar
+    Cachex.get! :lvc, aar, [ fallback: &load_sdk_levels!/1 ]
+  end
+
+  defp load_sdk_levels!(%Aar{} = aar) do
+    aar
+    |> Repo.load_aar_file!
+    |> Aar.sdk_levels!
+  end
+
+  defp resolve_revision(%Aar{} = aar) do
+    aar.revision
+    |> case do
       nil -> true
       "" -> true
       "latest.integration" -> true
@@ -27,23 +39,11 @@ defmodule Asapi.Ext.Data do
       "latest.release" -> true
       rev -> String.ends_with?(rev, "+")
     end
-    |> if do
-      aar_rev! aar
-    else
+    |> unless do
       aar
+    else
+      rev = Cachex.get! :lvc, aar, [ fallback: &Repo.resolve/1 ]
+      %{aar | revision: rev}
     end
-  end
-
-  defp aar_rev!(%Aar{} = aar) do
-    rev = Cachex.get! :lvc, aar, [ fallback: &Repo.resolve/1 ]
-    %{aar | revision: rev}
-  end
-
-  def load_artifact!(%Aar{} = aar) do
-    Repo.load_artifact!(aar)
-  end
-
-  def sdk_levels!(%Aar{} = aar) do
-    Cachex.get! :lvc, aar, [ fallback: &Aar.sdk_levels!/1 ]
   end
 end

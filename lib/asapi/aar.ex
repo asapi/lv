@@ -23,12 +23,12 @@ defmodule Asapi.Aar do
   @enforce_keys [:group, :name]
   defstruct [:group, :name, :revision, :classifier]
 
-  def resolve!(%Aar{} = aar) do
-    Data.resolve_rev!(aar)
+  def sdk_levels!(%Aar{} = aar) do
+    Data.sdk_levels! aar
   end
 
-  def sdk_levels!(%Aar{} = aar) do
-    Data.load_artifact!(aar)
+  def sdk_levels!(aar_file) do
+    aar_file
     |> load_manifest!
     |> sdk_levels
     |> case do

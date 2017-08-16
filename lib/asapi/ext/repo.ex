@@ -84,7 +84,7 @@ defmodule Asapi.Ext.Repo do
   end
 
 
-  def load_artifact!(%Aar{} = aar) do
+  def load_aar_file!(%Aar{} = aar) do
     @repos
     |> Enum.reduce_while(nil, &load_aar_file!(&1, aar, &2))
   end

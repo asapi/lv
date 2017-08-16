@@ -29,20 +29,13 @@ defmodule Asapi.Lv do
 
   def api_lv(%Aar{} = aar) do
     try do
-      api_lv! aar
+      case Aar.sdk_levels! aar do
+        nil -> @unknown
+        lv -> lv
+      end
     rescue error ->
       Logger.warn Exception.message error
       @unknown
-    end
-  end
-
-  defp api_lv!(%Aar{} = aar) do
-    aar
-    |> Aar.resolve!
-    |> Aar.sdk_levels!
-    |> case do
-      nil -> @unknown
-      lv -> lv
     end
   end
 end
