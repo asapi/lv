@@ -17,6 +17,7 @@
 defmodule Asapi.Aar do
   alias Asapi.Aar
   alias Asapi.Ext.Data
+  require Logger
 
   @manifest 'AndroidManifest.xml'
 
@@ -27,16 +28,21 @@ defmodule Asapi.Aar do
     Data.sdk_levels! aar
   end
 
-  def sdk_levels!(aar_file) do
-    aar_file
-    |> load_manifest!
-    |> sdk_levels
-    |> case do
-      {nil, nil} -> "1+"
-      {sdk, sdk} -> to_string sdk
-      {min_sdk, nil} -> "#{min_sdk}+"
-      {nil, max_sdk} -> "1-#{max_sdk}"
-      {min_sdk, max_sdk} -> "#{min_sdk}-#{max_sdk}"
+  def sdk_levels(aar_file) do
+    try do
+      info = load_manifest! aar_file
+      min = sdk_ver Regex.run ~R/android:minSdkVersion="([0-9]+)"/, info
+      max = sdk_ver Regex.run ~R/android:maxSdkVersion="([0-9]+)"/, info
+      case {min, max} do
+        {nil, nil} -> "1+"
+        {sdk, sdk} -> to_string sdk
+        {min_sdk, nil} -> "#{min_sdk}+"
+        {nil, max_sdk} -> "1-#{max_sdk}"
+        {min_sdk, max_sdk} -> "#{min_sdk}-#{max_sdk}"
+      end
+    rescue error ->
+      Logger.debug Exception.message error
+      nil
     end
   end
 
@@ -45,12 +51,6 @@ defmodule Asapi.Aar do
     {:ok, {@manifest, manifest}} = :zip.zip_get(@manifest, aar)
     :ok = :zip.zip_close(aar)
     manifest
-  end
-
-  defp sdk_levels(manifest) do
-    min_sdk = sdk_ver Regex.run ~R/android:minSdkVersion="([0-9]+)"/, manifest
-    max_sdk = sdk_ver Regex.run ~R/android:maxSdkVersion="([0-9]+)"/, manifest
-    {min_sdk, max_sdk}
   end
 
   defp sdk_ver(nil) do

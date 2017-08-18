@@ -26,7 +26,7 @@ defmodule Asapi.Ext.Data do
   defp load_sdk_levels!(%Aar{} = aar) do
     aar
     |> Repo.load_aar_file!
-    |> Aar.sdk_levels!
+    |> Aar.sdk_levels
   end
 
   defp resolve_revision(%Aar{} = aar) do
