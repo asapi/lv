@@ -14,27 +14,19 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-defmodule Asapi.Library do
-  @behaviour Plug
+defmodule Asapi.Redirect do
   import Plug.Conn, only: [fetch_query_params: 1]
-  import Trot.Router, only: [do_redirect: 2]
-  import Asapi.Redirect, only: [build_url: 3]
+  import Plug.Conn.Query, only: [encode: 1]
 
-  def init(opts), do: opts
-
-  def call(%Plug.Conn{} = conn, _opts) do
+  def build_url(%Plug.Conn{} = conn, path, consumed \\ []) do
     conn
     |> fetch_query_params
-    |> handle
-  end
-
-  defp handle(%Plug.Conn{query_params: %{"library" => lib}} = conn) do
-    conn
-    |> build_url("/#{String.replace lib, ":", "/"}", ["library"])
-    |> do_redirect(conn)
-  end
-
-  defp handle(%Plug.Conn{} = conn) do
-    conn
+    |> Map.get(:query_params)
+    |> Map.drop(consumed)
+    |> encode
+    |> case do
+      "" -> path
+      query -> "#{path}?#{query}"
+    end
   end
 end

@@ -18,6 +18,7 @@ defmodule Asapi.Router do
   alias Asapi.Aar
   import Asapi
   import Asapi.Lv
+  import Asapi.Redirect, only: [build_url: 2]
   use Asapi
   use Trot.Router
   use Trot.Template
@@ -26,57 +27,63 @@ defmodule Asapi.Router do
 
 
   get "/:group/:name/+/api.png" do
-    {:redirect, "/#{group}/#{name}/api.png"}
+    conn
+    |> build_url("/#{group}/#{name}/api.png")
+    |> redirect_to
   end
 
   get "/:g/api.png" do
     %Aar{group: g, name: nil}
-    |> badge(:png)
+    |> badge(conn, :png)
   end
 
   get "/:g/:n/api.png" do
     %Aar{group: g, name: n}
-    |> badge(:png)
+    |> badge(conn, :png)
   end
 
   get "/:g/:n/:v/api.png" do
     %Aar{group: g, name: n, revision: v}
-    |> badge(:png)
+    |> badge(conn, :png)
   end
 
   get "/:g/:n/:v/:c/api.png" do
     %Aar{group: g, name: n, revision: v, classifier: c}
-    |> badge(:png)
+    |> badge(conn, :png)
   end
 
 
   get "/:group/:name/+/api.svg" do
-    {:redirect, "/#{group}/#{name}/api.svg"}
+    conn
+    |> build_url("/#{group}/#{name}/api.svg")
+    |> redirect_to
   end
 
   get "/:g/api.svg" do
     %Aar{group: g, name: nil}
-    |> badge(:svg)
+    |> badge(conn, :svg)
   end
 
   get "/:g/:n/api.svg" do
     %Aar{group: g, name: n}
-    |> badge(:svg)
+    |> badge(conn, :svg)
   end
 
   get "/:g/:n/:v/api.svg" do
     %Aar{group: g, name: n, revision: v}
-    |> badge(:svg)
+    |> badge(conn, :svg)
   end
 
   get "/:g/:n/:v/:c/api.svg" do
     %Aar{group: g, name: n, revision: v, classifier: c}
-    |> badge(:svg)
+    |> badge(conn, :svg)
   end
 
 
   get "/:group/:name/+/api.txt" do
-    {:redirect, "/#{group}/#{name}/api.txt"}
+    conn
+    |> build_url("/#{group}/#{name}/api.txt")
+    |> redirect_to
   end
 
   get "/:g/api.txt" do
@@ -101,7 +108,9 @@ defmodule Asapi.Router do
 
 
   get "/:group/:name/+" do
-    {:redirect, "/#{group}/#{name}"}
+    conn
+    |> build_url("/#{group}/#{name}")
+    |> redirect_to
   end
 
   get "/:g/:n" do
@@ -123,8 +132,8 @@ defmodule Asapi.Router do
   get "/*path" do
     no_aar = %Aar{group: nil, name: nil}
     case Enum.reverse(path) do
-      ["api.png" | _] -> badge no_aar, :png
-      ["api.svg" | _] -> badge no_aar, :svg
+      ["api.png" | _] -> badge no_aar, conn, :png
+      ["api.svg" | _] -> badge no_aar, conn, :svg
       ["api.txt" | _] -> api_lv no_aar
       _ -> asapi_lv no_aar, conn
     end
@@ -133,7 +142,7 @@ defmodule Asapi.Router do
   import_routes Trot.NotFound
 
 
-  defp asapi_lv(%Aar{} = aar, conn) do
+  defp asapi_lv(%Aar{} = aar, %Plug.Conn{} = conn) do
     path = case conn.request_path do
       "/" -> ""
       path -> path
@@ -146,7 +155,13 @@ defmodule Asapi.Router do
       loading: "#{shield(@loading)}.svg"
   end
 
-  defp badge(%Aar{} = aar, type) do
-    {:redirect, "#{shield(api_lv aar)}.#{type}"}
+  defp badge(%Aar{} = aar, %Plug.Conn{} = conn, type) do
+    conn
+    |> build_url("#{shield(api_lv aar)}.#{type}")
+    |> redirect_to
+  end
+
+  defp redirect_to(url) do
+    {:redirect, url}
   end
 end
