@@ -90,12 +90,13 @@ document.forms[0].onsubmit = function(e) {
 <div id="info" style="justify-content:flex-end;flex-wrap:wrap;">
 <div style="flex-grow:1">
 <h4 style="margin-top:0">Android version history</h4>
-<img alt="API level 26" src="https://img.shields.io/badge/API-26-lightgray.svg">
-Android O
+<p>
+<img alt="API level 26" src="https://img.shields.io/badge/API-26-green.svg">
+Android 8.0 Oreo
 <small>[2017]</small>
 <p>
 <img alt="API level 25" src="https://img.shields.io/badge/API-25-green.svg">
-Android 7.1.1 Nougat
+Android 7.1 Nougat
 <small>[2016]</small>
 <p>
 <img alt="API level 24" src="https://img.shields.io/badge/API-24-green.svg">
@@ -126,15 +127,15 @@ Android 4.4 KitKat
 Android 4.3 Jelly Bean
 <small>[2013]</small>
 <p>
-<img alt="API level 17" src="https://img.shields.io/badge/API-17-green.svg">
+<img alt="API level 17" src="https://img.shields.io/badge/API-17-yellow.svg">
 Android 4.2 Jelly Bean
 <small>[2012]</small>
 <p>
-<img alt="API level 16" src="https://img.shields.io/badge/API-16-green.svg">
+<img alt="API level 16" src="https://img.shields.io/badge/API-16-yellow.svg">
 Android 4.1 Jelly Bean
 <small>[2012]</small>
 <p>
-<img alt="API level 15" src="https://img.shields.io/badge/API-15-green.svg">
+<img alt="API level 15" src="https://img.shields.io/badge/API-15-yellow.svg">
 Android 4.0.3 Ice Cream Sandwich
 <small>[2011]</small>
 <p>
@@ -142,19 +143,19 @@ Android 4.0.3 Ice Cream Sandwich
 Android 4.0 Ice Cream Sandwich
 <small>[2011]</small>
 <p>
-<img alt="API level 13" src="https://img.shields.io/badge/API-13-yellow.svg">
+<img alt="API level 13" src="https://img.shields.io/badge/API-13-red.svg">
 Android 3.2 Honeycomb
 <small>[2011]</small>
 <p>
-<img alt="API level 12" src="https://img.shields.io/badge/API-12-yellow.svg">
+<img alt="API level 12" src="https://img.shields.io/badge/API-12-red.svg">
 Android 3.1 Honeycomb
 <small>[2011]</small>
 <p>
-<img alt="API level 11" src="https://img.shields.io/badge/API-11-yellow.svg">
+<img alt="API level 11" src="https://img.shields.io/badge/API-11-red.svg">
 Android 3.0 Honeycomb
 <small>[2011]</small>
 <p>
-<img alt="API level 10" src="https://img.shields.io/badge/API-10-yellow.svg">
+<img alt="API level 10" src="https://img.shields.io/badge/API-10-red.svg">
 Android 2.3.3 Gingerbread
 <small>[2011]</small>
 <p>
