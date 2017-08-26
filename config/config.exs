@@ -6,7 +6,7 @@ config :trot, :router, Asapi.Router
 config :trot, :pre_routing, [
   "Elixir.Trot.LiveReload": [env: Mix.env],
   "Elixir.Plug.Logger": [],
-  "Elixir.Plug.Static": [at: "/", from: :asapi, only: ["favicon.ico"]],
+  "Elixir.Plug.Static": [at: "/", from: :asapi],
   "Elixir.Asapi.Library": []
 ]
 

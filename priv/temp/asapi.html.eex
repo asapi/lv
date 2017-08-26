@@ -26,6 +26,7 @@ input[type="search"] { flex-grow: 1; }
 p > img { vertical-align: top; }
 ul {list-style-type: none; padding: 0; }
 ul > li { padding: 2px 0; }
+ul > li > a > img { width: 1.1em; height: 1.1em; vertical-align: top }
 @media(orientation: portrait) {
 div#info { display: block; }
 div.wrap { display: flex; flex-wrap: wrap; justify-content: flex-end; }
@@ -196,55 +197,26 @@ Android 1.0
 <small>[2008]</small>
 </div>
 <div class="wrap" style="text-align:right">
-<div>
-<h4>Repositories</h4>
-<ul>
+<div><h4>Repositories</h4><ul>
 <li><a href="https://search.maven.org/">Maven Central</a>
 <li><a href="https://bintray.com/bintray/jcenter">JCenter</a>
 <li><a href="https://jitpack.io/">JitPack</a>
 <li><a href="https://maven.google.com/">Google</a>
-</ul>
-</div>
-<div>
-<h4>References</h4>
-<ul>
+</ul></div>
+<div><h4>References</h4><ul>
 <li><a href="https://shields.io/#your-badge">shields.io</a>
 <li><a href="https://developer.android.com/about/index.html">Android</a>
 <li><a href="https://android-arsenal.com/api">Versions</a>
 <li><a href="https://daringfireball.net/projects/markdown/syntax#img">Markdown</a>
-</ul>
-</div>
-<div>
-<h4>Contribute</h4>
-<a href="https://github.com/asapi/lv">
-<svg width="1.1em" height="1.1em" viewbox="0 0 32 32" style="vertical-align:top">
-<!-- (c) & (t) GitHub, Inc. -->
-<g>
-<path d="M 15.998527,0.39484182 C 7.1633875,0.39484182 0,7.5582293
- 0,16.395333 c 0,7.069093 4.5840572,13.065594 10.942018,15.182295
- 0.800516,0.146352 1.092237,-0.347709 1.092237,-0.772031 0,-0.37914
- -0.01375,-1.385924 -0.02161,-2.720771 C 7.562172,29.051338 6.6231622,25.93964
- 6.6231622,25.93964 5.8953313,24.09207 4.846312,23.599974 4.846312,23.599974
- 3.3935971,22.606941 4.9563216,22.626586 4.9563216,22.626586
- c 1.6059424,0.113938 2.4506584,1.64916 2.4506584,1.64916 1.427177,2.444765
- 3.745235,1.738544 4.656742,1.329937 0.14537,-1.034286 0.557905,-1.739526
- 1.015624,-2.139292 -3.552718,-0.403696 -7.2881308,-1.77685 -7.2881308,-7.907916
- 0,-1.746401 0.6237147,-3.17456 1.647196,-4.293318 C 7.273397,10.860479
- 6.7243316,9.2339099 7.5945855,7.0307729 c 0,0 1.3436876,-0.4302157
- 4.4003805,1.6403205 1.275914,-0.3545842 2.64514,-0.5323675 4.005525,-0.5382608
- 1.358421,0.00589 2.727647,0.1836766 4.005525,0.5382608 3.054729,-2.0705362
- 4.39547,-1.6403205 4.39547,-1.6403205 0.8732,2.203137 0.324135,3.8297061
- 0.159121,4.2343841 1.025445,1.118758 1.645231,2.546917 1.645231,4.293318
- 0,6.146781 -3.741306,7.499309 -7.30581,7.895147 0.574603,0.49406
- 1.086344,1.470395 1.086344,2.963381 0,2.13831 -0.01965,3.864084
- -0.01965,4.388594 0,0.428251 0.287793,0.926241 1.100095,0.770067
- C 27.419872,29.455034 32,23.462462 32,16.395333 32,7.5582293 24.83563,0.39484182
- 15.998527,0.39484182" style="fill:#1b1817;fill-opacity:1;fill-rule:evenodd;stroke:none" />
-</g>
-</svg>
-asapi/lv
-</a>
-</div>
+</ul></div>
+<div><h4>Contribute</h4><ul>
+<li><a href="https://github.com/asapi/lv">
+<img alt="gh" src="/gh.svg">
+asapi/lv</a>
+<li><a href="bitcoin:37mxh6eMPLeb8TgauakmfQiV7T1Rf7KYY9">
+<img alt="btc" src="/btc.svg">
+support</a>
+</ul></div>
 </div>
 </div>
 <hr>
