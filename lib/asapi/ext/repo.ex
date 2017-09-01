@@ -29,7 +29,7 @@ defmodule Asapi.Ext.Repo do
     ]
 
 
-  def resolve(%Aar{} = aar) do
+  def resolve!(%Aar{} = aar) do
     pattern = case aar.revision do
       nil -> ""
       "" -> ""
@@ -84,9 +84,10 @@ defmodule Asapi.Ext.Repo do
   end
 
 
-  def load_aar_file!(%Aar{} = aar) do
+  def load!(%Aar{} = aar) do
     @repos
     |> Enum.reduce_while(nil, &load_aar_file!(&1, aar, &2))
+    |> Aar.sdk_levels!
   end
 
   defp load_aar_file!(repo, %Aar{} = aar, _) do

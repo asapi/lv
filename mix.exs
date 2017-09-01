@@ -14,7 +14,7 @@ defmodule Lv.Mixfile do
 
   def application do
     [
-      applications: [:cachex, :tesla, :trot],
+      applications: [:cachex, :redix, :tesla, :trot],
       mod: {Asapi.Ext, []}
     ]
   end
@@ -23,6 +23,7 @@ defmodule Lv.Mixfile do
     [
       {:trot, github: "hexedpackets/trot"},
       {:tesla, "~> 0.7.1"},
+      {:redix, ">= 0.0.0"},
       {:cachex, "~> 2.1"}
     ]
   end

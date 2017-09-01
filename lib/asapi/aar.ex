@@ -17,32 +17,28 @@
 defmodule Asapi.Aar do
   alias Asapi.Aar
   alias Asapi.Ext.Data
-  require Logger
 
   @manifest 'AndroidManifest.xml'
 
   @enforce_keys [:group, :name]
   defstruct [:group, :name, :revision, :classifier]
 
+
   def sdk_levels!(%Aar{} = aar) do
-    Data.sdk_levels! aar
+    Data.get! aar
   end
 
-  def sdk_levels(aar_file) do
-    try do
-      info = load_manifest! aar_file
-      min = sdk_ver Regex.run ~R/android:minSdkVersion="([0-9]+)"/, info
-      max = sdk_ver Regex.run ~R/android:maxSdkVersion="([0-9]+)"/, info
-      case {min, max} do
-        {nil, nil} -> "1+"
-        {sdk, sdk} -> to_string sdk
-        {min_sdk, nil} -> "#{min_sdk}+"
-        {nil, max_sdk} -> "1-#{max_sdk}"
-        {min_sdk, max_sdk} -> "#{min_sdk}-#{max_sdk}"
-      end
-    rescue error ->
-      Logger.debug Exception.message error
-      nil
+
+  def sdk_levels!(aar_file) do
+    info = load_manifest! aar_file
+    min = sdk_ver Regex.run ~R/android:minSdkVersion="([0-9]+)"/, info
+    max = sdk_ver Regex.run ~R/android:maxSdkVersion="([0-9]+)"/, info
+    case {min, max} do
+      {nil, nil} -> "1+"
+      {sdk, sdk} -> to_string sdk
+      {min_sdk, nil} -> "#{min_sdk}+"
+      {nil, max_sdk} -> "1-#{max_sdk}"
+      {min_sdk, max_sdk} -> "#{min_sdk}-#{max_sdk}"
     end
   end
 
@@ -60,6 +56,7 @@ defmodule Asapi.Aar do
   defp sdk_ver([_, level]) do
     String.to_integer level
   end
+
 
   defimpl String.Chars, for: Aar do
     def to_string(aar) do

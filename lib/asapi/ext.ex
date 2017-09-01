@@ -16,20 +16,23 @@
 
 defmodule Asapi.Ext do
   use Application
+  use Supervisor
 
   def start(_type, _args) do
     Supervisor.start_link(__MODULE__, [], name: __MODULE__)
   end
 
-  def init(_arg) do
-    import Supervisor.Spec
-    children = [
-      worker(Cachex, [:lvc, [
+  def init(_args) do
+    redis_url = Application.get_env :redix, :url, []
+    {redis_count, _} = Integer.parse Application.get_env :redix, :count, "5"
+    [
+      worker(Cachex, [ :lvc, [
         ode: true,
         default_ttl: :timer.hours(2),
         ttl_interval: -1
-      ]])
+      ] ]),
+      supervisor(Asapi.Ext.Redis, [ {redis_url, redis_count} ])
     ]
-    supervise(children, strategy: :one_for_one)
+    |> supervise(strategy: :one_for_one)
   end
 end
