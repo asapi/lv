@@ -16,16 +16,12 @@
 
 defmodule Asapi.Router do
   alias Asapi.Aar
+  alias Plug.Conn
 
-  import Asapi
-  import Asapi.Lv
-  import Asapi.Redirect
+  import Asapi.Redirect, only: [build_url: 2, redirect_to: 1]
 
-  use Asapi
+
   use Trot.Router
-  use Trot.Template
-
-  @template_root "priv/temp"
 
 
   get "/:group/:name/+/api.png" do
@@ -36,22 +32,22 @@ defmodule Asapi.Router do
 
   get "/:g/api.png" do
     %Aar{group: g, name: nil}
-    |> badge(conn, :png)
+    |> route(conn, :png)
   end
 
   get "/:g/:n/api.png" do
     %Aar{group: g, name: n}
-    |> badge(conn, :png)
+    |> route(conn, :png)
   end
 
   get "/:g/:n/:v/api.png" do
     %Aar{group: g, name: n, revision: v}
-    |> badge(conn, :png)
+    |> route(conn, :png)
   end
 
   get "/:g/:n/:v/:c/api.png" do
     %Aar{group: g, name: n, revision: v, classifier: c}
-    |> badge(conn, :png)
+    |> route(conn, :png)
   end
 
 
@@ -63,22 +59,22 @@ defmodule Asapi.Router do
 
   get "/:g/api.svg" do
     %Aar{group: g, name: nil}
-    |> badge(conn, :svg)
+    |> route(conn, :svg)
   end
 
   get "/:g/:n/api.svg" do
     %Aar{group: g, name: n}
-    |> badge(conn, :svg)
+    |> route(conn, :svg)
   end
 
   get "/:g/:n/:v/api.svg" do
     %Aar{group: g, name: n, revision: v}
-    |> badge(conn, :svg)
+    |> route(conn, :svg)
   end
 
   get "/:g/:n/:v/:c/api.svg" do
     %Aar{group: g, name: n, revision: v, classifier: c}
-    |> badge(conn, :svg)
+    |> route(conn, :svg)
   end
 
 
@@ -90,22 +86,22 @@ defmodule Asapi.Router do
 
   get "/:g/api.txt" do
     %Aar{group: g, name: nil}
-    |> api_lv(conn)
+    |> route(conn, :txt)
   end
 
   get "/:g/:n/api.txt" do
     %Aar{group: g, name: n}
-    |> api_lv(conn)
+    |> route(conn, :txt)
   end
 
   get "/:g/:n/:v/api.txt" do
     %Aar{group: g, name: n, revision: v}
-    |> api_lv(conn)
+    |> route(conn, :txt)
   end
 
   get "/:g/:n/:v/:c/api.txt" do
     %Aar{group: g, name: n, revision: v, classifier: c}
-    |> api_lv(conn)
+    |> route(conn, :txt)
   end
 
 
@@ -117,86 +113,35 @@ defmodule Asapi.Router do
 
   get "/:g/:n" do
     %Aar{group: g, name: n}
-    |> asapi_lv(conn)
+    |> route(conn, :html)
   end
 
   get "/:g/:n/:v" do
     %Aar{group: g, name: n, revision: v}
-    |> asapi_lv(conn)
+    |> route(conn, :html)
   end
 
   get "/:g/:n/:v/:c" do
     %Aar{group: g, name: n, revision: v, classifier: c}
-    |> asapi_lv(conn)
+    |> route(conn, :html)
   end
 
 
   get "/*path" do
     no_aar = %Aar{group: nil, name: nil}
-    case Enum.reverse(path) do
-      ["api.png" | _] -> badge no_aar, conn, :png
-      ["api.svg" | _] -> badge no_aar, conn, :svg
-      ["api.txt" | _] -> api_lv no_aar, conn
-      _ -> asapi_lv no_aar, conn
+    ext = case Enum.reverse(path) do
+      ["api.png" | _] -> :png
+      ["api.svg" | _] -> :svg
+      ["api.txt" | _] -> :txt
+      _ -> :html
     end
-  end
-
-  import_routes Trot.NotFound
-
-
-  defp redirect_to(url) do
-    {:redirect, url}
+    route no_aar, conn, ext
   end
 
 
-  defp reload(%Aar{} = aar, %Plug.Conn{} = conn) do
+  defp route(%Aar{} = aar, %Conn{} = conn, ext) do
     conn
-    |> invalidate(aar)
-    |> build_url(conn.request_path, ["reload"])
-    |> redirect_to
-  end
-
-  defp invalidate(%Plug.Conn{query_params: %{"reload" => _}} = conn, %Aar{} = aar) do
-    clear aar
-    conn
-  end
-
-  defp invalidate(%Plug.Conn{} = conn, %Aar{}) do
-    conn
-  end
-
-
-  defp asapi_lv(%Aar{} = aar, %Plug.Conn{query_params: %{"reload" => _}} = conn) do
-    reload aar, conn
-  end
-
-  defp asapi_lv(%Aar{} = aar, %Plug.Conn{} = conn) do
-    path = case conn.request_path do
-      "/" -> ""
-      path -> path
-    end
-    render_template "asapi.html.eex",
-      host: conn.host,
-      path: path,
-      lib: to_string(aar),
-      api: api_lv(aar),
-      loading: "#{shield(@loading)}.svg"
-  end
-
-
-  defp badge(%Aar{} = aar, %Plug.Conn{} = conn, type) do
-    conn
-    |> invalidate(aar)
-    |> build_url("#{shield(api_lv aar)}.#{type}", ["reload"])
-    |> redirect_to
-  end
-
-
-  defp api_lv(%Aar{} = aar, %Plug.Conn{query_params: %{"reload" => _}} = conn) do
-    reload aar, conn
-  end
-
-  defp api_lv(%Aar{} = aar, %Plug.Conn{}) do
-    api_lv aar
+    |> assign(:asapi_aar, aar)
+    |> assign(:asapi_ext, ext)
   end
 end

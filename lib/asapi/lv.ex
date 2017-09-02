@@ -15,20 +15,65 @@
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 defmodule Asapi.Lv do
+  alias Plug.Conn
   alias Asapi.Aar
   alias Asapi.Ext.Data
   require Logger
+
+  import Trot.Router, only: [make_response: 2]
+  import Asapi.Redirect, only: [build_url: 3, redirect_to: 1]
+
   use Asapi
+  use Trot.Template
 
-  def api_lv(%Aar{group: nil}) do
-    @unknown
+  @template_root "priv/temp"
+
+
+  @behaviour Plug
+
+  def init(opts), do: opts
+
+  def call(%Conn{state: :unset} = conn, _opts) do
+    conn
+    |> asapi_lv
+    |> make_response(conn)
   end
 
-  def api_lv(%Aar{name: nil}) do
-    @unknown
+  def call(%Conn{} = conn, _opts), do: conn
+
+
+  defp asapi_lv(%Conn{assigns: %{asapi_aar: %Aar{} = aar, asapi_ext: :html}} = conn) do
+    path = case conn.request_path do
+      "/" -> ""
+      path -> path
+    end
+    render_template "asapi.html.eex",
+      host: conn.host,
+      path: path,
+      lib: to_string(aar),
+      api: api_lv(aar),
+      loading: "#{shield(@loading)}.svg"
   end
 
-  def api_lv(%Aar{} = aar) do
+  defp asapi_lv(%Conn{assigns: %{asapi_aar: aar, asapi_ext: type}} = conn) when type in [:png, :svg] do
+    conn
+    |> build_url("#{shield(api_lv aar)}.#{type}", ["reload"])
+    |> redirect_to
+  end
+
+  defp asapi_lv(%Conn{assigns: %{asapi_aar: aar, asapi_ext: :txt}}) do
+    api_lv aar
+  end
+
+  defp asapi_lv(%Conn{} = conn) do
+    conn
+  end
+
+
+  defp api_lv(%Aar{group: nil}), do: @unknown
+  defp api_lv(%Aar{name: nil}), do: @unknown
+
+  defp api_lv(%Aar{} = aar) do
     try do
       case Data.get! aar do
         nil -> @unknown
@@ -37,16 +82,6 @@ defmodule Asapi.Lv do
     rescue error ->
       Logger.warn Exception.message error
       @unknown
-    end
-  end
-
-  def clear(%Aar{} = aar) do
-    try do
-      Data.clear! aar
-      :ok
-    rescue error ->
-      Logger.warn Exception.message error
-      :error
     end
   end
 end

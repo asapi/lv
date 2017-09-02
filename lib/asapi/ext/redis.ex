@@ -71,10 +71,6 @@ defmodule Asapi.Ext.Redis do
   end
 
 
-  defp conn do
-    :"redix#{Agent.get_and_update :nid, &get_and_incr/1}"
-  end
-
   defp get_and_incr({ids, id}) do
     nid = id + 1
     if nid in ids do
@@ -84,7 +80,6 @@ defmodule Asapi.Ext.Redis do
     end
   end
 
-  defp reset(ids) do
-    {ids, Enum.min ids}
-  end
+  defp conn, do: :"redix#{Agent.get_and_update :nid, &get_and_incr/1}"
+  defp reset(ids), do: {ids, Enum.min ids}
 end

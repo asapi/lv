@@ -17,9 +17,14 @@ config :trot,
       "Elixir.Trot.LiveReload": [env: Mix.env],
       "Elixir.Plug.Logger": [],
       "Elixir.Asapi.Library": [],
+      "Elixir.PlugHeartbeat": [],
       "Elixir.Plug.Static": [at: "/", from: :asapi]
+    ],
+    post_routing: [
+      "Elixir.Asapi.Reload": [],
+      "Elixir.Asapi.Lv": [],
+      "Elixir.Trot.NotFound": []
     ]
-
 
 env_config.( :redix, :count, "REDIS_CONN_COUNT" )
 env_config.( :redix, :url, "REDIS_URL" )

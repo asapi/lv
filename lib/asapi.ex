@@ -37,6 +37,7 @@ defmodule Asapi do
 
   defmacro __using__(_) do
     quote do
+      import Asapi
       @loading unquote(@loading)
       @unknown unquote(@unknown)
     end

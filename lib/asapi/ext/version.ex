@@ -19,13 +19,8 @@ defmodule Asapi.Ext.Version do
 
   defstruct major: 0, minor: 0, rev: 0, s: nil
 
-  def parse!(%Version{} = version) do
-    version
-  end
-
-  def parse!(nil) do
-    %Version{}
-  end
+  def parse!(%Version{} = version), do: version
+  def parse!(nil), do: %Version{}
 
   def parse!(v) do
     String.split(v, ".")

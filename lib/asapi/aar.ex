@@ -43,13 +43,8 @@ defmodule Asapi.Aar do
     manifest
   end
 
-  defp sdk_ver(nil) do
-    nil
-  end
-
-  defp sdk_ver([_, level]) do
-    String.to_integer level
-  end
+  defp sdk_ver(nil), do: nil
+  defp sdk_ver([_, level]), do: String.to_integer level
 
 
   defimpl String.Chars, for: Aar do
