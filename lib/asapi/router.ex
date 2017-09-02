@@ -16,9 +16,11 @@
 
 defmodule Asapi.Router do
   alias Asapi.Aar
+
   import Asapi
   import Asapi.Lv
-  import Asapi.Redirect, only: [build_url: 2]
+  import Asapi.Redirect
+
   use Asapi
   use Trot.Router
   use Trot.Template
@@ -88,22 +90,22 @@ defmodule Asapi.Router do
 
   get "/:g/api.txt" do
     %Aar{group: g, name: nil}
-    |> api_lv
+    |> api_lv(conn)
   end
 
   get "/:g/:n/api.txt" do
     %Aar{group: g, name: n}
-    |> api_lv
+    |> api_lv(conn)
   end
 
   get "/:g/:n/:v/api.txt" do
     %Aar{group: g, name: n, revision: v}
-    |> api_lv
+    |> api_lv(conn)
   end
 
   get "/:g/:n/:v/:c/api.txt" do
     %Aar{group: g, name: n, revision: v, classifier: c}
-    |> api_lv
+    |> api_lv(conn)
   end
 
 
@@ -134,13 +136,39 @@ defmodule Asapi.Router do
     case Enum.reverse(path) do
       ["api.png" | _] -> badge no_aar, conn, :png
       ["api.svg" | _] -> badge no_aar, conn, :svg
-      ["api.txt" | _] -> api_lv no_aar
+      ["api.txt" | _] -> api_lv no_aar, conn
       _ -> asapi_lv no_aar, conn
     end
   end
 
   import_routes Trot.NotFound
 
+
+  defp redirect_to(url) do
+    {:redirect, url}
+  end
+
+
+  defp reload(%Aar{} = aar, %Plug.Conn{} = conn) do
+    conn
+    |> invalidate(aar)
+    |> build_url(conn.request_path, ["reload"])
+    |> redirect_to
+  end
+
+  defp invalidate(%Plug.Conn{query_params: %{"reload" => _}} = conn, %Aar{} = aar) do
+    clear aar
+    conn
+  end
+
+  defp invalidate(%Plug.Conn{} = conn, %Aar{}) do
+    conn
+  end
+
+
+  defp asapi_lv(%Aar{} = aar, %Plug.Conn{query_params: %{"reload" => _}} = conn) do
+    reload aar, conn
+  end
 
   defp asapi_lv(%Aar{} = aar, %Plug.Conn{} = conn) do
     path = case conn.request_path do
@@ -155,13 +183,20 @@ defmodule Asapi.Router do
       loading: "#{shield(@loading)}.svg"
   end
 
+
   defp badge(%Aar{} = aar, %Plug.Conn{} = conn, type) do
     conn
-    |> build_url("#{shield(api_lv aar)}.#{type}")
+    |> invalidate(aar)
+    |> build_url("#{shield(api_lv aar)}.#{type}", ["reload"])
     |> redirect_to
   end
 
-  defp redirect_to(url) do
-    {:redirect, url}
+
+  defp api_lv(%Aar{} = aar, %Plug.Conn{query_params: %{"reload" => _}} = conn) do
+    reload aar, conn
+  end
+
+  defp api_lv(%Aar{} = aar, %Plug.Conn{}) do
+    api_lv aar
   end
 end

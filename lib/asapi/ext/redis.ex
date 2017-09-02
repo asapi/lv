@@ -34,18 +34,40 @@ defmodule Asapi.Ext.Redis do
 
 
   def get!(%Aar{} = aar, rcb, dtl) when is_function(rcb, 1) do
-    key = to_string aar
-    value = Redix.command! conn(), ["GET", key]
-    unless value do
-      set! key, rcb.(aar), dtl
-    else
-      value
+    aar
+    |> to_string
+    |> get!
+    |> case do
+        nil -> set! aar, rcb.(aar), dtl
+        value -> value
     end
   end
 
-  defp set!(key, value, dtl) do
-    Redix.command! conn(), ["SET", key, value, "EX", to_string(dtl*86400)]
+  def get!(key) when is_binary(key) do
+    Redix.command! conn, ["GET", key]
+  end
+
+  defp set!(%Aar{} = aar, value, dtl) do
+    if value do
+      Redix.command! conn, [
+          "SET", to_string(aar), to_string(value),
+          "EX", to_string(dtl*86400)
+      ]
+    end
     value
+  end
+
+
+  def get_and_del!(%Aar{} = aar) do
+    key = to_string aar
+    Redix.pipeline!(conn, [
+        [ "MULTI" ],
+        [ "GET", key ],
+        [ "DEL", key ],
+        [ "EXEC" ]
+    ])
+    |> List.last
+    |> List.first
   end
 
 

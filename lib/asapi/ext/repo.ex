@@ -84,6 +84,19 @@ defmodule Asapi.Ext.Repo do
   end
 
 
+  def resolve?(%Aar{} = aar) do
+    aar.revision
+    |> case do
+      nil -> true
+      "" -> true
+      "latest.integration" -> true
+      "latest.milestone" -> true
+      "latest.release" -> true
+      rev -> String.ends_with? rev, "+"
+    end
+  end
+
+
   def load!(%Aar{} = aar) do
     @repos
     |> Enum.reduce_while(nil, &load_aar_file!(&1, aar, &2))

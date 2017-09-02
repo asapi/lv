@@ -16,6 +16,7 @@
 
 defmodule Asapi.Lv do
   alias Asapi.Aar
+  alias Asapi.Ext.Data
   require Logger
   use Asapi
 
@@ -29,13 +30,23 @@ defmodule Asapi.Lv do
 
   def api_lv(%Aar{} = aar) do
     try do
-      case Aar.sdk_levels! aar do
+      case Data.get! aar do
         nil -> @unknown
         lv -> lv
       end
     rescue error ->
       Logger.warn Exception.message error
       @unknown
+    end
+  end
+
+  def clear(%Aar{} = aar) do
+    try do
+      Data.clear! aar
+      :ok
+    rescue error ->
+      Logger.warn Exception.message error
+      :error
     end
   end
 end

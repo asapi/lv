@@ -25,24 +25,72 @@ defmodule Asapi.Ext.Data do
   end
 
   defp resolved!(%Aar{} = aar) do
-    aar.revision
-    |> case do
-      nil -> true
-      "" -> true
-      "latest.integration" -> true
-      "latest.milestone" -> true
-      "latest.release" -> true
-      rev -> String.ends_with? rev, "+"
-    end
-    |> unless do
-      aar
-    else
+    if resolve? aar do
       rev = Cachex.get! :lvc, aar, from(&resolve!/1, 1)
       %{aar | revision: rev}
+    else
+      aar
     end
   end
 
   defp from(fallback, dtl) do
     [ fallback: &Redis.get!(&1, fallback, dtl) ]
+  end
+
+
+  def clear!(%Aar{} = aar) do
+    Cachex.execute :lvc, &clear!(&1, {aar})
+    nil
+  end
+
+  defp clear!(worker, {%Aar{}} = aar) do
+    if Cachex.get_and_update! :lvc, aar, &is_nil/1, [ fallback: &clear/1 ] do
+      Cachex.expire! worker, aar, :timer.minutes(3)
+    end
+  end
+
+
+  defp clear({%Aar{} = aar}) do
+    dyn = resolve? aar
+    clear_redis(aar, dyn)
+    |> clear_cache(aar, dyn)
+    nil
+  end
+
+
+  defp clear_redis(aar, _ \\ false)
+
+  defp clear_redis(%Aar{} = aar, true) do
+    revision = clear_redis aar
+    clear_redis %{aar | revision: revision}
+    revision
+  end
+
+  defp clear_redis(%Aar{} = aar, _) do
+    Redis.get_and_del! aar
+  end
+
+
+  defp clear_cache(rev, %Aar{} = aar, dyn) do
+    Cachex.execute :lvc, &clear_cache(&1, aar, rev, dyn)
+  end
+
+
+  defp clear_cache(worker, aar, rev \\ nil, dyn \\ false)
+
+  defp clear_cache(worker, %Aar{} = aar, rev, true) do
+    clear_cache worker, %{aar | revision: rev}
+    revision = clear_cache worker, aar
+    clear_cache worker, %{aar | revision: revision}, rev
+  end
+
+  defp clear_cache(_, %Aar{revision: rev}, rev, _) do
+    rev
+  end
+
+  defp clear_cache(worker, %Aar{} = aar, _, _) do
+    {_, revision} = Cachex.get worker, aar
+    Cachex.del worker, aar
+    revision
   end
 end

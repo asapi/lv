@@ -16,17 +16,11 @@
 
 defmodule Asapi.Aar do
   alias Asapi.Aar
-  alias Asapi.Ext.Data
 
   @manifest 'AndroidManifest.xml'
 
   @enforce_keys [:group, :name]
   defstruct [:group, :name, :revision, :classifier]
-
-
-  def sdk_levels!(%Aar{} = aar) do
-    Data.get! aar
-  end
 
 
   def sdk_levels!(aar_file) do
