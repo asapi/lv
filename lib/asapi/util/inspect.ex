@@ -14,22 +14,8 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-defmodule Asapi.Redirect do
-  alias Plug.Conn
-  import Plug.Conn, only: [fetch_query_params: 1]
-  import Plug.Conn.Query, only: [encode: 1]
-
-  def build_url(%Conn{} = conn, path, consumed \\ []) do
-    conn
-    |> fetch_query_params
-    |> Map.get(:query_params)
-    |> Map.drop(consumed)
-    |> encode
-    |> case do
-      "" -> path
-      query -> "#{path}?#{query}"
-    end
-  end
-
-  def redirect_to(url), do: {:redirect, url}
+defmodule Asapi.Util.Inspect do
+  @behaviour Plug
+  def init(opts), do: opts
+  def call(%Plug.Conn{} = conn, _opts), do: IO.inspect conn
 end

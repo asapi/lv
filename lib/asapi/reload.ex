@@ -21,7 +21,7 @@ defmodule Asapi.Reload do
   alias Asapi.Ext.Data
 
   import Trot.Router, only: [do_redirect: 2]
-  import Asapi.Redirect, only: [build_url: 3]
+  import Asapi.Util, only: [build_url: 3]
 
 
   @behaviour Plug

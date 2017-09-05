@@ -21,7 +21,7 @@ defmodule Asapi.Lv do
   require Logger
 
   import Trot.Router, only: [make_response: 2]
-  import Asapi.Redirect, only: [build_url: 3, redirect_to: 1]
+  import Asapi.Util, only: [build_url: 3, redirect_to: 1]
 
   use Asapi
   use Trot.Template

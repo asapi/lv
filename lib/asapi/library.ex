@@ -18,7 +18,7 @@ defmodule Asapi.Library do
   alias Plug.Conn
   import Plug.Conn, only: [fetch_query_params: 1]
   import Trot.Router, only: [do_redirect: 2]
-  import Asapi.Redirect, only: [build_url: 3]
+  import Asapi.Util, only: [build_url: 3]
 
   @behaviour Plug
 

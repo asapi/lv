@@ -14,41 +14,22 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-defmodule Asapi.Router do
-  alias Asapi.Aar
+defmodule Asapi.Util do
+  alias Plug.Conn
+  import Plug.Conn, only: [fetch_query_params: 1]
+  import Plug.Conn.Query, only: [encode: 1]
 
-  import Asapi.Util, only: [build_url: 2, redirect_to: 1]
-
-  defmacro route(aar) do
-    quote do: assign var!(conn), :asapi_aar, unquote(aar)
-  end
-
-
-  use Trot.Router
-
-  get "/:group/:name/+" do
-    ext = case conn.assigns[:asapi_ext] do
-      :html -> ""
-      ext -> "@#{ext}"
-    end
+  def build_url(%Conn{} = conn, path, consumed \\ []) do
     conn
-    |> build_url("/#{group}/#{name}#{ext}")
-    |> redirect_to
+    |> fetch_query_params
+    |> Map.get(:query_params)
+    |> Map.drop(consumed)
+    |> encode
+    |> case do
+      "" -> path
+      query -> "#{path}?#{query}"
+    end
   end
 
-  get "/:g/:n" do
-    route %Aar{group: g, name: n}
-  end
-
-  get "/:g/:n/:v" do
-    route %Aar{group: g, name: n, revision: v}
-  end
-
-  get "/:g/:n/:v/:c" do
-    route %Aar{group: g, name: n, revision: v, classifier: c}
-  end
-
-  get "/*_path" do
-    route %Aar{group: nil, name: nil}
-  end
+  def redirect_to(url), do: {:redirect, url}
 end

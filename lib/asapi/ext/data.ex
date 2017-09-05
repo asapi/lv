@@ -16,17 +16,18 @@
 
 defmodule Asapi.Ext.Data do
   alias Asapi.Aar
+  alias Asapi.Ext.Repo
   alias Asapi.Ext.Redis
-  import Asapi.Ext.Repo
+
 
   def get!(%Aar{} = aar) do
     aar = resolved! aar
-    Cachex.get! :lvc, aar, from(&load!/1, 7)
+    Cachex.get! :lvc, aar, from(&Repo.load!/1, 7)
   end
 
   defp resolved!(%Aar{} = aar) do
-    if resolve? aar do
-      rev = Cachex.get! :lvc, aar, from(&resolve!/1, 1)
+    if Repo.resolve? aar do
+      rev = Cachex.get! :lvc, aar, from(&Repo.resolve!/1, 1)
       %{aar | revision: rev}
     else
       aar
@@ -51,7 +52,7 @@ defmodule Asapi.Ext.Data do
 
 
   defp clear({%Aar{} = aar}) do
-    dyn = resolve? aar
+    dyn = Repo.resolve? aar
     clear_redis(aar, dyn)
     |> clear_cache(aar, dyn)
     nil
