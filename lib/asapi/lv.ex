@@ -43,12 +43,22 @@ defmodule Asapi.Lv do
 
 
   defp asapi_lv(%Conn{assigns: %{asapi_aar: %Aar{} = aar, asapi_ext: :html}} = conn) do
-    path = case conn.request_path do
-      "/" -> ""
-      path -> path
+    host = conn.port
+    |> case do
+      "" -> conn.host
+      80 -> conn.host
+      443 -> conn.host
+      nil -> conn.host
+      port -> "#{conn.host}:#{port}"
+    end
+    path = conn.path_info
+    |> Enum.join("/")
+    |> case do
+      "" -> "/"
+      path -> "/#{path}"
     end
     render_template "asapi.html.eex",
-      host: conn.host,
+      host: host,
       path: path,
       lib: to_string(aar),
       api: api_lv(aar),

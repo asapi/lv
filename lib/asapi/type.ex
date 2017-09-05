@@ -14,27 +14,43 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-defmodule Asapi.Library do
+defmodule Asapi.Type do
   alias Plug.Conn
-  import Plug.Conn, only: [fetch_query_params: 1]
-  import Trot.Router, only: [do_redirect: 2]
-  import Asapi.Redirect, only: [build_url: 3]
+
+  import Plug.Conn, only: [assign: 3]
 
   @behaviour Plug
 
   def init(opts), do: opts
 
-  def call(%Conn{} = conn, _opts) do
+
+  def call(%Conn{state: :unset} = conn, _opts) do
+    {last, ext} = split_ext conn
     conn
-    |> fetch_query_params
-    |> handle
+    |> assign(:asapi_ext, ext)
+    |> Map.update!(:path_info, update_path_info(last))
   end
 
-  defp handle(%Conn{query_params: %{"library" => lib}} = conn) do
-    conn
-    |> build_url("/#{String.replace lib, ":", "/"}", ["library"])
-    |> do_redirect(conn)
+  def call(%Conn{} = conn, _opts), do: conn
+
+
+  @stdext :html
+
+  defp split_ext(%Conn{path_info: []}), do: {nil, @stdext}
+
+  defp split_ext(%Conn{} = conn) do
+    conn.path_info
+    |> List.last
+    |> String.split("@")
+    |> case do
+      [last] -> {last, @stdext}
+      [last, ""] -> {last, @stdext}
+      [last, ext] -> {last, :"#{ext}"}
+      [last, ext | _] -> {last, :"#{ext}"}
+    end
   end
 
-  defp handle(%Conn{} = conn), do: conn
+  defp update_path_info(nil), do: &(&1)
+  defp update_path_info(""), do: &List.delete_at(&1, -1)
+  defp update_path_info(last), do: &List.update_at(&1, -1, fn _ -> last end)
 end

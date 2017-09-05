@@ -18,7 +18,8 @@ config :trot,
       "Elixir.Plug.Logger": [],
       "Elixir.Asapi.Library": [],
       "Elixir.PlugHeartbeat": [],
-      "Elixir.Plug.Static": [at: "/", from: :asapi]
+      "Elixir.Plug.Static": [at: "/", from: :asapi],
+      "Elixir.Asapi.Type": []
     ],
     post_routing: [
       "Elixir.Asapi.Reload": [],

@@ -16,132 +16,39 @@
 
 defmodule Asapi.Router do
   alias Asapi.Aar
-  alias Plug.Conn
 
   import Asapi.Redirect, only: [build_url: 2, redirect_to: 1]
+
+  defmacro route(aar) do
+    quote do: assign var!(conn), :asapi_aar, unquote(aar)
+  end
 
 
   use Trot.Router
 
-
-  get "/:group/:name/+/api.png" do
-    conn
-    |> build_url("/#{group}/#{name}/api.png")
-    |> redirect_to
-  end
-
-  get "/:g/api.png" do
-    %Aar{group: g, name: nil}
-    |> route(conn, :png)
-  end
-
-  get "/:g/:n/api.png" do
-    %Aar{group: g, name: n}
-    |> route(conn, :png)
-  end
-
-  get "/:g/:n/:v/api.png" do
-    %Aar{group: g, name: n, revision: v}
-    |> route(conn, :png)
-  end
-
-  get "/:g/:n/:v/:c/api.png" do
-    %Aar{group: g, name: n, revision: v, classifier: c}
-    |> route(conn, :png)
-  end
-
-
-  get "/:group/:name/+/api.svg" do
-    conn
-    |> build_url("/#{group}/#{name}/api.svg")
-    |> redirect_to
-  end
-
-  get "/:g/api.svg" do
-    %Aar{group: g, name: nil}
-    |> route(conn, :svg)
-  end
-
-  get "/:g/:n/api.svg" do
-    %Aar{group: g, name: n}
-    |> route(conn, :svg)
-  end
-
-  get "/:g/:n/:v/api.svg" do
-    %Aar{group: g, name: n, revision: v}
-    |> route(conn, :svg)
-  end
-
-  get "/:g/:n/:v/:c/api.svg" do
-    %Aar{group: g, name: n, revision: v, classifier: c}
-    |> route(conn, :svg)
-  end
-
-
-  get "/:group/:name/+/api.txt" do
-    conn
-    |> build_url("/#{group}/#{name}/api.txt")
-    |> redirect_to
-  end
-
-  get "/:g/api.txt" do
-    %Aar{group: g, name: nil}
-    |> route(conn, :txt)
-  end
-
-  get "/:g/:n/api.txt" do
-    %Aar{group: g, name: n}
-    |> route(conn, :txt)
-  end
-
-  get "/:g/:n/:v/api.txt" do
-    %Aar{group: g, name: n, revision: v}
-    |> route(conn, :txt)
-  end
-
-  get "/:g/:n/:v/:c/api.txt" do
-    %Aar{group: g, name: n, revision: v, classifier: c}
-    |> route(conn, :txt)
-  end
-
-
   get "/:group/:name/+" do
+    ext = case conn.assigns[:asapi_ext] do
+      :html -> ""
+      ext -> "@#{ext}"
+    end
     conn
-    |> build_url("/#{group}/#{name}")
+    |> build_url("/#{group}/#{name}#{ext}")
     |> redirect_to
   end
 
   get "/:g/:n" do
-    %Aar{group: g, name: n}
-    |> route(conn, :html)
+    route %Aar{group: g, name: n}
   end
 
   get "/:g/:n/:v" do
-    %Aar{group: g, name: n, revision: v}
-    |> route(conn, :html)
+    route %Aar{group: g, name: n, revision: v}
   end
 
   get "/:g/:n/:v/:c" do
-    %Aar{group: g, name: n, revision: v, classifier: c}
-    |> route(conn, :html)
+    route %Aar{group: g, name: n, revision: v, classifier: c}
   end
 
-
-  get "/*path" do
-    no_aar = %Aar{group: nil, name: nil}
-    ext = case Enum.reverse(path) do
-      ["api.png" | _] -> :png
-      ["api.svg" | _] -> :svg
-      ["api.txt" | _] -> :txt
-      _ -> :html
-    end
-    route no_aar, conn, ext
-  end
-
-
-  defp route(%Aar{} = aar, %Conn{} = conn, ext) do
-    conn
-    |> assign(:asapi_aar, aar)
-    |> assign(:asapi_ext, ext)
+  get "/*_path" do
+    route %Aar{group: nil, name: nil}
   end
 end
