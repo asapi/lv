@@ -32,4 +32,6 @@ defmodule Asapi.Util do
   end
 
   def redirect_to(url), do: {:redirect, url}
+
+  def send_text(text), do: {:ok, text, ["content-type": "text/plain"]}
 end

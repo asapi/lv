@@ -21,7 +21,7 @@ defmodule Asapi.Lv do
   require Logger
 
   import Trot.Router, only: [make_response: 2]
-  import Asapi.Util, only: [build_url: 3, redirect_to: 1]
+  import Asapi.Util, only: [build_url: 3, redirect_to: 1, send_text: 1]
 
   use Asapi
   use Trot.Template
@@ -72,7 +72,9 @@ defmodule Asapi.Lv do
   end
 
   defp asapi_lv(%Conn{assigns: %{asapi_aar: aar, asapi_ext: :txt}}) do
-    api_lv aar
+    aar
+    |> api_lv
+    |> send_text
   end
 
   defp asapi_lv(%Conn{} = conn) do
