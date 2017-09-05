@@ -19,20 +19,8 @@
 <meta charset="utf-8">
 <!-- knowitall knowitnow nevermind -->
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<style type="text/css">
-div#info { display:flex; }
-hr { border: none; border-top: 2px dashed lightgray; margin: 24px 12px; }
-input[type="search"] { flex-grow: 1; }
-p > img { vertical-align: top; }
-ul {list-style-type: none; padding: 0; }
-ul > li { padding: 2px 0; }
-ul > li > a > img { width: 1.1em; height: 1.1em; vertical-align: top }
-@media(orientation: portrait) {
-div#info { display: block; }
-div.wrap { display: flex; flex-wrap: wrap; justify-content: flex-end; }
-div.wrap > * { margin: 0 12px; }
-}
-</style>
+<link rel="stylesheet" type="text/css" href="/style.css">
+<script src="/page.js"></script>
 <title>Android SDK API level - <%= @lib %></title>
 <div style="margin:auto;max-width:678px;padding:8px">
 <h2 style="text-align:center">Android SDK API level of <code>@aar</code> artifacts</h2>
@@ -41,44 +29,7 @@ div.wrap > * { margin: 0 12px; }
 <input type="search" name="library" placeholder="groupId:artifactId:version" value="<%= @lib %>">
 <input type="submit" value="Search">
 <script type="text/javascript">
-history.replaceState("<%= @lib %>", "Android SDK API level - <%= @lib %>", "")
-function updateImgAlt(img, path) {
-  if (this.readyState == 4) {
-    var api = this.status == 200 ? this.responseText : "unknown"
-    img.alt = "API level " + api
-    img.src = path + "@svg"
-  }
-}
-function loadApiLevelText(img, path) {
-  var xhttp = new XMLHttpRequest()
-  xhttp.onreadystatechange = updateImgAlt.bind(xhttp, img, path)
-  xhttp.open("GET", path + "@txt", true)
-  xhttp.send()
-}
-function updatePage(library) {
-  document.title = "Android API level - " + library
-  var path = library.replace(/:/g, "/")
-  if (path.endsWith("/")) path = path.substring(0, path.length-1)
-  if (path.endsWith("/+")) path = path.substring(0, path.length-2)
-  if (!path.startsWith("/")) path = "/" + path
-  var badge = path + "@svg"
-  document.getElementById("url").innerText = "<%= @host %>" + path + "@svg"
-  var a = document.getElementById("badge")
-  a.href = path
-  var img = a.firstElementChild
-  img.src = "<%= @loading %>"
-  img.alt = "API level loading"
-  loadApiLevelText(img, path)
-  return path
-}
-window.onpopstate = function(e) {
-  updatePage(e.state)
-}
-document.forms[0].onsubmit = function(e) {
-  var library = document.forms[0][0].value
-  history.pushState(library, document.title, updatePage(library))
-  return false
-}
+π("<%= @lib %>", "<%= @host %>", "<%= @loading %>")
 </script>
 </form>
 <p style="text-align:center" id="url">
@@ -212,10 +163,10 @@ Android 1.0
 <div><h4>Contribute</h4><ul>
 <li><a href="?reload">clear cache</a>
 <li><a href="https://github.com/asapi/lv">
-<img alt="gh" src="/gh.svg">
+<img width="24" alt="gh" src="/gh.svg">
 asapi/lv</a>
 <li><a href="bitcoin:37mxh6eMPLeb8TgauakmfQiV7T1Rf7KYY9">
-<img alt="btc" src="/btc.svg">
+<img width="24" alt="btc" src="/btc.svg">
 support</a>
 </ul></div>
 </div>
