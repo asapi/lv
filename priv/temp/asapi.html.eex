@@ -32,8 +32,10 @@
 π("<%= @lib %>", "<%= @host %>", "<%= @loading %>")
 </script>
 </form>
-<p style="text-align:center" id="url">
+<p style="text-align:center">
+<a id="url" href="<%= @path %>@svg">
 <%= @host %><%= @path %>@svg
+</a>
 <p style="text-align:center">
 <a id="badge" href="<%= @path %>">
 <img alt="API level <%= @api %>" src="<%= @path %>@svg">
@@ -161,13 +163,13 @@ Android 1.0
 <li><a href="https://daringfireball.net/projects/markdown/syntax#img">Markdown</a>
 </ul></div>
 <div><h4>Contribute</h4><ul>
-<li><a href="?reload">clear cache</a>
 <li><a href="https://github.com/asapi/lv">
 <img width="24" alt="gh" src="/gh.svg">
 asapi/lv</a>
 <li><a href="bitcoin:37mxh6eMPLeb8TgauakmfQiV7T1Rf7KYY9">
 <img width="24" alt="btc" src="/btc.svg">
 support</a>
+<li><a href="?reload">clear cache</a>
 </ul></div>
 </div>
 </div>

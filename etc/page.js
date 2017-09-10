@@ -35,8 +35,10 @@ function π(lib, host, loadingSrc) {
     if (path.endsWith("/+")) path = path.substring(0, path.length-2)
     if (!path.startsWith("/")) path = "/" + path
     var badge = path + "@svg"
-    document.getElementById("url").innerText = host + path + "@svg"
-    var a = document.getElementById("badge")
+    var a = document.getElementById("url")
+    a.innerText = host + path + "@svg"
+    a.href = path + "@svg"
+    a = document.getElementById("badge")
     a.href = path
     var img = a.firstElementChild
     img.src = loadingSrc
