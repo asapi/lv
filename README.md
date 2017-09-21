@@ -1,11 +1,15 @@
 # Android Sdk Api Level
-[![Build][2]][1]
+[![Build][master]][travis]
+[![Coverage][covmaster]][codecov]
 
-Get Sdk Levels of Android libraries as a badge to use as a shield.
+Get Sdk Levels of Android libraries as a shield to use as a badge.
 
 
 ## Heroku Builds
-[![Build][3]][1]
+[![Build][heroku]][travis]
+[![Coverage][covheroku]][codecov]
+
+https://asapi.herokuapp.com
 
 #### Only Elixir *heroku*
  * https://github.com/HashNuke/heroku-buildpack-elixir
@@ -16,6 +20,9 @@ Get Sdk Levels of Android libraries as a badge to use as a shield.
  * https://github.com/HashNuke/heroku-buildpack-elixir
 
 
-  [1]: https://travis-ci.org/asapi/Lv
-  [2]: https://travis-ci.org/asapi/Lv.svg?branch=master
-  [3]: https://travis-ci.org/asapi/Lv.svg?branch=heroku
+  [travis]: https://travis-ci.org/asapi/Lv
+  [master]: https://travis-ci.org/asapi/Lv.svg?branch=master
+  [heroku]: https://travis-ci.org/asapi/Lv.svg?branch=heroku
+  [codecov]: https://codecov.io/gh/asapi/Lv
+  [covmaster]: https://codecov.io/gh/asapi/Lv/branch/master/graph/badge.svg
+  [covheroku]: https://codecov.io/gh/asapi/Lv/branch/heroku/graph/badge.svg

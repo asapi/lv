@@ -20,6 +20,7 @@ defmodule Asapi.Ext.Repo do
   use Tesla
 
   plug Tesla.Middleware.FollowRedirects
+  plug Tesla.Middleware.Retry, max_retries: 3
 
   @repos [
       "https://repo1.maven.org/maven2",
@@ -75,7 +76,7 @@ defmodule Asapi.Ext.Repo do
 
   defp versions(response) do
     if response.status in 200..299 do
-      ~R{<version>(.+)</version>}
+      ~R{<version>([^<]+)</version>}
       |> Regex.scan(response.body)
       |> Enum.map(&(Version.parse! String.trim List.last &1))
     else

@@ -19,18 +19,16 @@ defmodule Asapi.Ext.Version do
 
   defstruct major: 0, minor: 0, rev: 0, s: nil
 
-  def parse!(%Version{} = version), do: version
   def parse!(nil), do: %Version{}
+  def parse!(%Version{} = version), do: version
 
   def parse!(v) do
     String.split(v, ".")
-    |> Enum.map(&Integer.parse/1)
-    |> Enum.map(&elem(&1, 0))
+    |> Enum.map(&elem(Integer.parse(&1), 0))
     |> case do
-      [maj, min, rev] -> %Version{major: maj, minor: min, rev: rev, s: v}
+      [maj, min, rev | _] -> %Version{major: maj, minor: min, rev: rev, s: v}
       [maj, min] -> %Version{major: maj, minor: min, s: v}
       [maj] -> %Version{major: maj, s: v}
-      _ -> %Version{s: v}
     end
   end
 
