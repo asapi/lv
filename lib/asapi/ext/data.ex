@@ -61,37 +61,37 @@ defmodule Asapi.Ext.Data do
 
   defp clear_redis(aar, _ \\ false)
 
+  defp clear_redis(%Aar{} = aar, false) do
+    Redis.get_and_del! aar
+  end
+
   defp clear_redis(%Aar{} = aar, true) do
     revision = clear_redis aar
     clear_redis %{aar | revision: revision}
     revision
   end
 
-  defp clear_redis(%Aar{} = aar, _) do
-    Redis.get_and_del! aar
-  end
-
 
   defp clear_cache(rev, %Aar{} = aar, dyn) do
-    Cachex.execute :lvc, &clear_cache(&1, aar, rev, dyn)
+    Cachex.execute :lvc, &clear_cache(&1, aar, dyn, rev)
   end
 
 
-  defp clear_cache(worker, aar, rev \\ nil, dyn \\ false)
+  defp clear_cache(worker, aar, dyn \\ false, rev \\ nil)
 
-  defp clear_cache(worker, %Aar{} = aar, rev, true) do
-    clear_cache worker, %{aar | revision: rev}
-    revision = clear_cache worker, aar
-    clear_cache worker, %{aar | revision: revision}, rev
-  end
-
-  defp clear_cache(_, %Aar{revision: rev}, rev, _) do
-    rev
-  end
-
-  defp clear_cache(worker, %Aar{} = aar, _, _) do
+  defp clear_cache(worker, %Aar{} = aar, false, _) do
     {_, revision} = Cachex.get worker, aar
     Cachex.del worker, aar
     revision
+  end
+
+  defp clear_cache(worker, %Aar{} = aar, true, rev) do
+    revision = clear_cache worker, aar
+    case rev do
+      nil -> nil
+      ^revision -> nil
+      _ -> clear_cache worker, %{aar | revision: rev}
+    end
+    clear_cache worker, %{aar | revision: revision}
   end
 end
