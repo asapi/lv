@@ -43,7 +43,7 @@ defmodule Asapi.Ext.Redis do
     end
   end
 
-  def get!(key) when is_binary(key) do
+  defp get!(key) when is_binary(key) do
     Redix.command! conn(), ["GET", key]
   end
 
