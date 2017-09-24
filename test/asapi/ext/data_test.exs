@@ -48,7 +48,7 @@ defmodule Asapi.Ext.DataTest do
       Cachex.del :lvc, {@aar1}
       Cachex.del :lvc, @aar2
       Cachex.del :lvc, {@aar2}
-      Redix.command! :redix0, ["DEL", "#{@aar1}", "#{@aar2}", "#{@aar3}"]
+      Redix.command! :redix0, ["DEL", "#{@aar0}", "#{@aar1}", "#{@aar2}"]
     end
   end
 

@@ -50,7 +50,6 @@ defmodule Asapi.Type do
     end
   end
 
-  defp update_path_info(nil), do: &(&1)
   defp update_path_info(""), do: &List.delete_at(&1, -1)
   defp update_path_info(last), do: &List.update_at(&1, -1, fn _ -> last end)
 end

@@ -14,19 +14,34 @@
 #   You should have received a copy of the GNU Affero General Public License
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
-defmodule Asapi.Util.InspectTest do
+defmodule Asapi.LibraryTest do
   use ExUnit.Case
-  import ExUnit.CaptureIO
-  alias Asapi.Util.Inspect
-  doctest Inspect
+  use Plug.Test
+  alias Asapi.Library
+  doctest Library
 
   test "init returns options unmodified" do
-    assert Inspect.init({1, 2, 3}) == {1, 2, 3}
+    assert Library.init({1, 2, 3}) == {1, 2, 3}
   end
 
-  test "call inspects and returns conn" do
-    conn = %Plug.Conn{port: 4000}
-    fun = fn -> assert Inspect.call(conn, {1, 2, 3}) == conn end
-    assert capture_io(fun) =~ "#{inspect(conn, pretty: true)}\n"
+  test "call fetches query params" do
+    conn = conn(:get, "/foo")
+    |> put_private(:test, :value)
+    |> Library.call(nil)
+    assert conn.params == %{}
+    assert conn.query_params == %{}
+  end
+
+  test "call returns conn without library param" do
+    conn = conn(:get, "/foo")
+    |> put_private(:test, :value)
+    |> fetch_query_params
+    assert Library.call(conn, nil) == conn
+  end
+
+  test "call redirects conn with library param" do
+    conn = conn(:get, "/foo?library=bar")
+    |> Library.call(nil)
+    assert {"location", "/bar"} in conn.resp_headers
   end
 end

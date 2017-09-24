@@ -27,6 +27,7 @@ defmodule Lv.Mixfile do
       {:tesla, "~> 0.7.1"},
       {:redix, ">= 0.0.0"},
       {:cachex, "~> 2.1"},
+      {:mock, "~> 0.2", only: :test},
       {:excoveralls, "~> 0.7", only: :test}
     ]
   end
