@@ -45,10 +45,8 @@ defmodule Asapi.Lv do
   defp asapi_lv(%Conn{assigns: %{asapi_aar: %Aar{} = aar, asapi_ext: :html}} = conn) do
     host = conn.port
     |> case do
-      "" -> conn.host
       80 -> conn.host
       443 -> conn.host
-      nil -> conn.host
       port -> "#{conn.host}:#{port}"
     end
     path = conn.path_info

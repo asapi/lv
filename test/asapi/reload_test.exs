@@ -37,7 +37,7 @@ defmodule Asapi.ReloadTest do
     assert Reload.call(conn, nil) == conn
   end
 
-  test_with_mock "call ingnores unset aar and redirects",
+  test_with_mock "call ignores unset aar and redirects",
         Data, [clear!: fn _ -> raise "error" end] do
     conn = conn(:get, "/foo?reload")
     |> put_private(:test, :value)
@@ -46,7 +46,7 @@ defmodule Asapi.ReloadTest do
     refute called Data.clear! @aar
   end
 
-  test_with_mock "call ingnores aar with invalid group and redirects",
+  test_with_mock "call ignores aar with invalid group and redirects",
         Data, [clear!: fn _ -> nil end] do
     conn = conn(:get, "/foo?reload")
     |> put_private(:test, :value)
@@ -56,7 +56,7 @@ defmodule Asapi.ReloadTest do
     refute called Data.clear! @aar
   end
 
-  test_with_mock "call ingnores aar with invalid name and redirects",
+  test_with_mock "call ignores aar with invalid name and redirects",
         Data, [clear!: fn _ -> nil end] do
     conn = conn(:get, "/foo?reload")
     |> put_private(:test, :value)
