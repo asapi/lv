@@ -29,42 +29,49 @@ defmodule Asapi.RouterTest do
 
   test "redirect + rev to html generic path" do
     conn = conn(:get, "/foo/bar/+")
+    |> Map.put(:scheme, :https)
     |> Router.call(nil)
     assert {"location", "/foo/bar"} in conn.resp_headers
   end
 
   test "redirect + rev with ext to generic path" do
     conn = conn(:get, "/foo/bar/+@svg")
+    |> Map.put(:scheme, :https)
     |> Router.call(nil)
     assert {"location", "/foo/bar@svg"} in conn.resp_headers
   end
 
   test "route group and name" do
     conn = conn(:get, "/foo/bar")
+    |> Map.put(:scheme, :https)
     |> Router.call(nil)
     assert_aar conn, "foo", "bar"
   end
 
   test "route group and name and revision" do
     conn = conn(:get, "/foo/bar/0.0")
+    |> Map.put(:scheme, :https)
     |> Router.call(nil)
     assert_aar conn, "foo", "bar", "0.0"
   end
 
   test "route group and name and revision and classifier" do
     conn = conn(:get, "/foo/bar/0.0/baz")
+    |> Map.put(:scheme, :https)
     |> Router.call(nil)
     assert_aar conn, "foo", "bar", "0.0", "baz"
   end
 
   test "route simple path with invalid aar" do
     conn = conn(:get, "/foo")
+    |> Map.put(:scheme, :https)
     |> Router.call(nil)
     assert_aar conn, nil, nil
   end
 
   test "route long path with invalid aar" do
     conn = conn(:get, "/foo/bar/0.0/baz/bat")
+    |> Map.put(:scheme, :https)
     |> Router.call(nil)
     assert_aar conn, nil, nil
   end
