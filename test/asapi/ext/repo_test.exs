@@ -28,7 +28,7 @@ defmodule Asapi.Ext.RepoTest do
       else
         %{env | status: 200, body: case Path.extname env.url do
           ".aar" -> File.read! "etc/#{Path.basename env.url}"
-          ".xml" -> "<version>0.1</version><version>0.0</version>"
+          ".xml" -> "<version>0.1</version><version>v0.0</version><version>0.0</version>"
         end}
       end
     end

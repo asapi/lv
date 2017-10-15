@@ -78,9 +78,18 @@ defmodule Asapi.Ext.Repo do
     if response.status in 200..299 do
       ~R{<version>([^<]+)</version>}
       |> Regex.scan(response.body)
-      |> Enum.map(&(Version.parse! String.trim List.last &1))
+      |> Enum.map(&version/1)
+      |> Enum.reject(&is_nil/1)
     else
       []
+    end
+  end
+
+  defp version(lib) do
+    try do
+      Version.parse! String.trim List.last lib
+    rescue error ->
+      nil
     end
   end
 
