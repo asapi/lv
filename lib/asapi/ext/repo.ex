@@ -88,7 +88,7 @@ defmodule Asapi.Ext.Repo do
   defp version(lib) do
     try do
       Version.parse! String.trim List.last lib
-    rescue error ->
+    rescue _ ->
       nil
     end
   end

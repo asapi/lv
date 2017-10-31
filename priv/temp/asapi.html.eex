@@ -26,7 +26,7 @@
 <h2 style="text-align:center">Android SDK API level of <code>@aar</code> artifacts</h2>
 <hr>
 <form method="get" style="display:flex">
-<input type="search" name="library" placeholder="groupId:artifactId:version" value="<%= @lib %>">
+<input type="search" name="library" placeholder="groupId:artifactId:version" value="<%= @lib %>" autocapitalize="none">
 <input type="submit" value="Search">
 <script type="text/javascript">
 π("<%= @lib %>", "<%= @host %>", "<%= @loading %>")
