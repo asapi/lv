@@ -45,7 +45,7 @@
 <div style="flex-grow:1">
 <h4 style="margin-top:0">Android version history</h4>
 <p>
-<img alt="API level 28" src="https://img.shields.io/badge/API-28-lightgrey.svg">
+<img alt="API level 28" src="https://img.shields.io/badge/API-28-green.svg">
 Android 9.0 Pie
 <small>[2018]</small>
 <p>
@@ -77,11 +77,11 @@ Android 5.1 Lollipops
 Android 5.0 Lollipop
 <small>[2014]</small>
 <p>
-<img alt="API level 20" src="https://img.shields.io/badge/API-20-green.svg">
+<img alt="API level 20" src="https://img.shields.io/badge/API-20-yellow.svg">
 Android 4.4 KitKat Wear
 <small>[2014]</small>
 <p>
-<img alt="API level 19" src="https://img.shields.io/badge/API-19-green.svg">
+<img alt="API level 19" src="https://img.shields.io/badge/API-19-yellow.svg">
 Android 4.4 KitKat
 <small>[2013]</small>
 <p>
