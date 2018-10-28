@@ -23,8 +23,8 @@ defmodule Asapi.Ext.DataTest do
   @aar1 %{@aar0 | revision: "0.0"}
   @aar2 %{@aar0 | revision: nil}
 
-  defmodule Adapter do
-    def call(env, _opts) do
+  setup do
+    Tesla.Mock.mock_global fn env ->
       if String.contains? env.url, "no/group" do
         %{env | status: 404}
       else
@@ -34,14 +34,6 @@ defmodule Asapi.Ext.DataTest do
         end}
       end
     end
-  end
-
-  setup_all do
-    Application.put_env :tesla, :adapter, Adapter
-    on_exit fn -> Application.delete_env :tesla, :adapter end
-  end
-
-  setup do
     on_exit fn ->
       Cachex.del :lvc, @aar0
       Cachex.del :lvc, @aar1

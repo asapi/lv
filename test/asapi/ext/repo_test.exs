@@ -21,8 +21,8 @@ defmodule Asapi.Ext.RepoTest do
 
   @aar %Aar{group: "any.group", name: "lv13", revision: "0.0"}
 
-  defmodule Adapter do
-    def call(env, _opts) do
+  setup do
+    Tesla.Mock.mock fn env ->
       if String.contains? env.url, "no/group" do
         %{env | status: 404}
       else
@@ -32,12 +32,9 @@ defmodule Asapi.Ext.RepoTest do
         end}
       end
     end
+    :ok
   end
 
-  setup_all do
-    Application.put_env :tesla, :adapter, Adapter
-    on_exit fn -> Application.delete_env :tesla, :adapter end
-  end
 
   test "resolve! returns highest version" do
     assert Repo.resolve!(@aar) == "0.1"

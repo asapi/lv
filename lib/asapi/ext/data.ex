@@ -22,20 +22,20 @@ defmodule Asapi.Ext.Data do
 
   def get!(%Aar{} = aar) do
     aar = resolved! aar
-    Cachex.get! :lvc, aar, from(&Repo.load!/1, 7)
+    Cachex.fetch! :lvc, aar, redis_get(&Repo.load!/1, 7)
   end
 
   defp resolved!(%Aar{} = aar) do
     if Repo.resolve? aar do
-      rev = Cachex.get! :lvc, aar, from(&Repo.resolve!/1, 1)
+      rev = Cachex.fetch! :lvc, aar, redis_get(&Repo.resolve!/1, 1)
       %{aar | revision: rev}
     else
       aar
     end
   end
 
-  defp from(fallback, dtl) do
-    [ fallback: &Redis.get!(&1, fallback, dtl) ]
+  defp redis_get(fallback, dtl) do
+    &Redis.get!(&1, fallback, dtl)
   end
 
 
@@ -45,17 +45,21 @@ defmodule Asapi.Ext.Data do
   end
 
   defp clear!(worker, {%Aar{}} = aar) do
-    if Cachex.get_and_update! :lvc, aar, &is_nil/1, [ fallback: &clear/1 ] do
+    if Cachex.get_and_update! worker, aar, &clear?/1 do
       Cachex.expire! worker, aar, :timer.minutes(3)
+      clear aar
     end
   end
+
+  defp clear?(false), do: { :ignore, false }
+  defp clear?(true), do: false
+  defp clear?(nil), do: true
 
 
   defp clear({%Aar{} = aar}) do
     dyn = Repo.resolve? aar
     clear_redis(aar, dyn)
     |> clear_cache(aar, dyn)
-    nil
   end
 
 

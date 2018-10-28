@@ -1,15 +1,6 @@
 use Mix.Config
-import System
 
-env_config = fn(app, key, env) ->
-  value = get_env env
-  unless is_nil value do
-    config app, key, value
-  end
-end
-
-
-config :logger, level: :info
+config :logger, level: :warn
 
 config :trot,
     router: Asapi.Router,
@@ -27,7 +18,4 @@ config :trot,
       "Elixir.Trot.NotFound": []
     ]
 
-env_config.( :redix, :count, "REDIS_CONN_COUNT" )
-env_config.( :redix, :url, "REDIS_URL" )
-
-env_config.( :trot, :port, "PORT" )
+import_config "#{Mix.env}.exs"

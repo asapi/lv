@@ -25,6 +25,7 @@ defmodule Asapi.Ext.RedisTest do
     on_exit fn -> Redix.command! :redix0, ["DEL", "#{@aar}"] end
   end
 
+
   test "get! returns data if set" do
     Redix.command! :redix0, ["SET", "#{@aar}", "1+"]
     assert Redis.get!(@aar, &(throw &1), 1) == "1+"

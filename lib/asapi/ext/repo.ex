@@ -70,7 +70,7 @@ defmodule Asapi.Ext.Repo do
   defp versions(%Aar{} = aar, repo) do
     module(repo, aar)
     |> metadata
-    |> get
+    |> get!
     |> versions
   end
 
@@ -87,7 +87,10 @@ defmodule Asapi.Ext.Repo do
 
   defp version(lib) do
     try do
-      Version.parse! String.trim List.last lib
+      lib
+      |> List.last
+      |> String.trim
+      |> Version.parse!
     rescue _ ->
       nil
     end
@@ -116,7 +119,7 @@ defmodule Asapi.Ext.Repo do
   defp load_aar_file!(repo, %Aar{} = aar, _) do
     module(repo, aar)
     |> aar_file(aar)
-    |> get
+    |> get!
     |> load_aar_file
   end
     
