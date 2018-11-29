@@ -2,6 +2,8 @@ use Mix.Config
 
 config :logger, level: :warn
 
+config :tesla, adapter: Tesla.Adapter.Hackney
+
 config :trot,
     router: Asapi.Router,
     pre_routing: [

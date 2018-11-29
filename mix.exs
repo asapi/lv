@@ -23,11 +23,12 @@ defmodule Asapi.Mixfile do
     { :redix, ">= 0.0.0" },
     { :cachex, "~> 3.1" },
     { :plug_cowboy, "~> 1.0" },
+    { :hackney, "~> 1.14.0" },
     { :mock, "~> 0.3.0", only: :test },
     { :excoveralls, "~> 0.10", only: :test }
   ]
 
   defp aliases, do: [
-    "run.all": [ "run --no-halt" ]
+    asapi: [ "run --no-halt" ]
   ]
 end
