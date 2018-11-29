@@ -23,7 +23,7 @@ defmodule Asapi.Ext do
   end
 
   def init(_args) do
-    redis_url = Application.get_env :redix, :url, []
+    redis_url = Application.get_env :redix, :url
     {redis_count, _} = Integer.parse Application.get_env :redix, :count, "5"
     [
       worker(Cachex, [ :lvc, [

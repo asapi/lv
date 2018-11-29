@@ -22,12 +22,15 @@ defmodule Asapi.Ext.Redis do
     Supervisor.start_link(__MODULE__, args, name: __MODULE__)
   end
 
-  def init({url, count}) do
+  def init({nil, count}), do: setup(count)
+  def init({url, count}), do: setup(count, [ url ])
+
+  defp setup(count, args \\ []) do
     ids = 0..count-1
     for i <- ids do
-      worker(Redix, [ url, [name: :"redix#{i}"] ], id: {Redix, i})
+      worker(Redix, args ++ [[ name: :"redix#{i}" ]], id: {Redix, i})
     end ++ [
-      worker(Agent, [ fn -> reset ids end, [name: :nid] ])
+      worker(Agent, [ fn -> reset ids end, [ name: :nid ] ])
     ]
     |> supervise(strategy: :one_for_one)
   end
