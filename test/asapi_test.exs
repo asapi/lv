@@ -26,20 +26,20 @@ defmodule AsapiTest do
 
   test "badge url with api" do
     assert Asapi.shield("1") ==
-        "https://img.shields.io/badge/API-1-blue"
+        "https://img.shields.io/badge/API-1-informational"
     assert Asapi.shield("2-3") ==
-        "https://img.shields.io/badge/API-2--3-blue"
+        "https://img.shields.io/badge/API-2--3-informational"
     assert Asapi.shield("4+") ==
-        "https://img.shields.io/badge/API-4%2B-blue"
+        "https://img.shields.io/badge/API-4+-informational"
   end
 
   test "unknown badge url" do
     assert Asapi.shield(@unknown) ==
-        "https://img.shields.io/badge/API-unknown-lightgrey"
+        "https://img.shields.io/badge/API-unknown-inactive"
   end
 
   test "loading badge url" do
     assert Asapi.shield(@loading) ==
-        "https://img.shields.io/badge/API-%E2%80%A6-lightgrey"
+        "https://img.shields.io/badge/API-…-inactive"
   end
 end

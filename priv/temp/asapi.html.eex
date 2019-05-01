@@ -21,29 +21,33 @@
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="/style.css">
 <script src="/page.js"></script>
-<title>Android SDK API level - <%= @lib %></title>
+<title>Android SDK API level - <%=@lib%></title>
 <div style="margin:auto;max-width:678px;padding:8px">
 <h2 style="text-align:center">Android SDK API level of <code>@aar</code> artifacts</h2>
 <hr>
 <form method="get" style="display:flex">
-<input type="search" name="library" placeholder="groupId:artifactId:version" value="<%= @lib %>" autocapitalize="none">
+<input type="search" name="library" placeholder="groupId:artifactId:version" value="<%=@lib%>" autocapitalize="none">
 <input type="submit" value="Search">
 <script type="text/javascript">
-π("<%= @lib %>", "<%= @host %>", "<%= @loading %>")
+π("<%=@lib%>","<%=@host%>","<%=@loading%>")
 </script>
 </form>
 <p style="text-align:center">
-<a id="url" href="<%= @path %>@svg">
-<%= @host %><%= @path %>@svg
+<a id="url" href="<%=@path%>@svg">
+<%=@host%><%=@path%>@svg
 </a>
 <p style="text-align:center">
-<a id="badge" href="<%= @path %>">
-<img alt="API level <%= @api %>" src="<%= @path %>@svg">
+<a id="badge" href="<%=@path%>">
+<img alt="API level <%=@api%>" src="<%=@path%>@svg">
 </a>
 <hr>
 <div id="info" style="justify-content:flex-end;flex-wrap:wrap">
 <div style="flex-grow:1">
 <h4 style="margin-top:0">Android version history</h4>
+<p>
+<img alt="API level 29" src="https://img.shields.io/badge/API-29-lightgrey.svg">
+Android 10 Q
+<small>[2019]</small>
 <p>
 <img alt="API level 28" src="https://img.shields.io/badge/API-28-green.svg">
 Android 9.0 Pie
