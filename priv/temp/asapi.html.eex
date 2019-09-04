@@ -45,8 +45,8 @@
 <div style="flex-grow:1">
 <h4 style="margin-top:0">Android version history</h4>
 <p>
-<img alt="API level 29" src="https://img.shields.io/badge/API-29-lightgrey.svg">
-Android 10 Q
+<img alt="API level 29" src="https://img.shields.io/badge/API-29-green.svg">
+Android 10
 <small>[2019]</small>
 <p>
 <img alt="API level 28" src="https://img.shields.io/badge/API-28-green.svg">
