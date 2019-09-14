@@ -16,6 +16,7 @@
   -  You should have received a copy of the GNU Affero General Public License
   -  along with this program. If not, see <http://www.gnu.org/licenses/>.
   -->
+<html lang="en">
 <meta charset="utf-8">
 <!-- knowitall knowitnow nevermind -->
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
@@ -28,7 +29,7 @@
 <form method="get" style="display:flex">
 <input type="search" name="library" placeholder="groupId:artifactId:version" value="<%=@lib%>" autocapitalize="none">
 <input type="submit" value="Search">
-<script type="text/javascript">
+<script>
 π("<%=@lib%>","<%=@host%>","<%=@loading%>")
 </script>
 </form>
@@ -80,6 +81,14 @@ Android 5.1 Lollipops
 <img alt="API level 21" src="https://img.shields.io/badge/API-21-green.svg">
 Android 5.0 Lollipop
 <small>[2014]</small>
+<div>
+<input id="y" type="checkbox">
+<p>
+<label for="y">
+<img alt="API level 14 to 20" src="https://img.shields.io/badge/API-20%20--%2014-yellow.svg">
+Android 4.0 - 4.4
+<small>[2011-2014]</small>
+</label>
 <p>
 <img alt="API level 20" src="https://img.shields.io/badge/API-20-yellow.svg">
 Android 4.4 KitKat Wear
@@ -108,6 +117,15 @@ Android 4.0.3 Ice Cream Sandwich
 <img alt="API level 14" src="https://img.shields.io/badge/API-14-yellow.svg">
 Android 4.0 Ice Cream Sandwich
 <small>[2011]</small>
+</div>
+<div>
+<input id="r" type="checkbox">
+<p>
+<label for="r">
+<img alt="API level 1 to 13" src="https://img.shields.io/badge/API-13%20--%201-red.svg">
+Android 1.0 - 3.2
+<small>[2008-2011]</small>
+</label>
 <p>
 <img alt="API level 13" src="https://img.shields.io/badge/API-13-red.svg">
 Android 3.2 Honeycomb
@@ -160,6 +178,7 @@ Android 1.1
 <img alt="API level 1" src="https://img.shields.io/badge/API-1-red.svg">
 Android 1.0
 <small>[2008]</small>
+</div>
 </div>
 <div class="wrap" style="text-align:right">
 <div><h4>Repositories</h4><ul>
