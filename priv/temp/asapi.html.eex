@@ -74,20 +74,20 @@ Android 7.0 Nougat
 Android 6.0 Marshmallow
 <small>[2015]</small>
 <p>
-<img alt="API level 22" src="https://img.shields.io/badge/API-22-green.svg">
+<img alt="API level 22" src="https://img.shields.io/badge/API-22-yellow.svg">
 Android 5.1 Lollipops
 <small>[2015]</small>
 <p>
-<img alt="API level 21" src="https://img.shields.io/badge/API-21-green.svg">
+<img alt="API level 21" src="https://img.shields.io/badge/API-21-yellow.svg">
 Android 5.0 Lollipop
 <small>[2014]</small>
-<div>
+</p>
 <input id="y" type="checkbox">
-<p>
+<p class="y">
 <label for="y">
-<img alt="API level 14 to 20" src="https://img.shields.io/badge/API-20%20--%2014-yellow.svg">
-Android 4.0 - 4.4
-<small>[2011-2014]</small>
+<img alt="API level 1 to 20" src="https://img.shields.io/badge/API-≤20-yellow.svg">
+Android 4.4 and before
+<small>[2008-2014]</small>
 </label>
 <p>
 <img alt="API level 20" src="https://img.shields.io/badge/API-20-yellow.svg">
@@ -114,16 +114,15 @@ Android 4.1 Jelly Bean
 Android 4.0.3 Ice Cream Sandwich
 <small>[2011]</small>
 <p>
-<img alt="API level 14" src="https://img.shields.io/badge/API-14-yellow.svg">
+<img alt="API level 14" src="https://img.shields.io/badge/API-14-red.svg">
 Android 4.0 Ice Cream Sandwich
 <small>[2011]</small>
-</div>
-<div>
+</p>
 <input id="r" type="checkbox">
-<p>
+<p class="r">
 <label for="r">
-<img alt="API level 1 to 13" src="https://img.shields.io/badge/API-13%20--%201-red.svg">
-Android 1.0 - 3.2
+<img alt="API level 1 to 13" src="https://img.shields.io/badge/API-≤13-red.svg">
+Android 3.2 and before
 <small>[2008-2011]</small>
 </label>
 <p>
@@ -178,7 +177,6 @@ Android 1.1
 <img alt="API level 1" src="https://img.shields.io/badge/API-1-red.svg">
 Android 1.0
 <small>[2008]</small>
-</div>
 </div>
 <div class="wrap" style="text-align:right">
 <div><h4>Repositories</h4><ul>
