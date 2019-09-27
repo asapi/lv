@@ -85,7 +85,7 @@ Android 5.0 Lollipop
 <input id="y" type="checkbox">
 <p class="y">
 <label for="y">
-<img alt="API level 1 to 20" src="https://img.shields.io/badge/API-≤20-lightgrey.svg">
+<img alt="API level 1 to 20" src="https://img.shields.io/badge/API-≤20-yellow.svg">
 Android 4.4 and before
 <small>[2008-2014]</small>
 </label>
@@ -121,7 +121,7 @@ Android 4.0 Ice Cream Sandwich
 <input id="r" type="checkbox">
 <p class="r">
 <label for="r">
-<img alt="API level 1 to 13" src="https://img.shields.io/badge/API-≤13-lightgrey.svg">
+<img alt="API level 1 to 13" src="https://img.shields.io/badge/API-≤13-red.svg">
 Android 3.2 and before
 <small>[2008-2011]</small>
 </label>
