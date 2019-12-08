@@ -23,10 +23,10 @@ defmodule Asapi.Ext.Repo do
   plug Tesla.Middleware.Retry, max_retries: 3
 
   @repos [
-      "https://repo1.maven.org/maven2",
       "https://maven.google.com",
-      "https://jcenter.bintray.com",
-      "https://jitpack.io"
+      "https://repo1.maven.org/maven2",
+      "https://jitpack.io",
+      "https://jcenter.bintray.com"
     ]
 
 
