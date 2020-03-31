@@ -84,6 +84,7 @@ Android 5.0 Lollipop
 <p>
 <details>
 <summary>
+<img alt="API level 1 to 20" src="https://img.shields.io/badge/API-1--20-yellow.svg">
 Android 4.4 and before
 <small>[2008-2014]</small>
 </summary>
@@ -118,6 +119,7 @@ Android 4.0 Ice Cream Sandwich
 <p>
 <details>
 <summary>
+<img alt="API level 1 to 13" src="https://img.shields.io/badge/API-1--13-red.svg">
 Android 3.2 and before
 <small>[2008-2011]</small>
 </summary>

@@ -2,8 +2,9 @@ details[open] > summary { display: none; }
 div#info { display: flex; }
 hr { border: none; border-top: 2px dashed lightgray; margin: 24px 12px; }
 input[type="search"] { flex-grow: 1; }
-img { vertical-align: top; }
-summary { cursor: pointer; }
+img { vertical-align: text-bottom; }
+summary { cursor: pointer; list-style: none; }
+summary::-webkit-details-marker { display: none; }
 ul { list-style-type: none; padding: 0; }
 ul > li { padding: 2px 0; }
 ul > li > a > img { width: 1.1em; height: 1.1em; }
