@@ -46,6 +46,10 @@
 <div style="flex-grow:1">
 <h4 style="margin-top:0">Android version history</h4>
 <p>
+<img alt="API level 30" src="https://img.shields.io/badge/API-30-green.svg">
+Android 11
+<small>[2020]</small>
+<p>
 <img alt="API level 29" src="https://img.shields.io/badge/API-29-green.svg">
 Android 10
 <small>[2019]</small>
@@ -62,15 +66,15 @@ Android 8.1 Oreo
 Android 8.0 Oreo
 <small>[2017]</small>
 <p>
-<img alt="API level 25" src="https://img.shields.io/badge/API-25-green.svg">
+<img alt="API level 25" src="https://img.shields.io/badge/API-25-yellow.svg">
 Android 7.1 Nougat
 <small>[2016]</small>
 <p>
-<img alt="API level 24" src="https://img.shields.io/badge/API-24-green.svg">
+<img alt="API level 24" src="https://img.shields.io/badge/API-24-yellow.svg">
 Android 7.0 Nougat
 <small>[2016]</small>
 <p>
-<img alt="API level 23" src="https://img.shields.io/badge/API-23-green.svg">
+<img alt="API level 23" src="https://img.shields.io/badge/API-23-yellow.svg">
 Android 6.0 Marshmallow
 <small>[2015]</small>
 <p>
@@ -97,19 +101,19 @@ Android 4.4 KitKat Wear
 Android 4.4 KitKat
 <small>[2013]</small>
 <p>
-<img alt="API level 18" src="https://img.shields.io/badge/API-18-yellow.svg">
+<img alt="API level 18" src="https://img.shields.io/badge/API-18-red.svg">
 Android 4.3 Jelly Bean
 <small>[2013]</small>
 <p>
-<img alt="API level 17" src="https://img.shields.io/badge/API-17-yellow.svg">
+<img alt="API level 17" src="https://img.shields.io/badge/API-17-red.svg">
 Android 4.2 Jelly Bean
 <small>[2012]</small>
 <p>
-<img alt="API level 16" src="https://img.shields.io/badge/API-16-yellow.svg">
+<img alt="API level 16" src="https://img.shields.io/badge/API-16-red.svg">
 Android 4.1 Jelly Bean
 <small>[2012]</small>
 <p>
-<img alt="API level 15" src="https://img.shields.io/badge/API-15-yellow.svg">
+<img alt="API level 15" src="https://img.shields.io/badge/API-15-red.svg">
 Android 4.0.3 Ice Cream Sandwich
 <small>[2011]</small>
 <p>
