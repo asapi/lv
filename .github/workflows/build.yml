@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  schedule:
+    - cron: '0 11 * * 1'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Elixir ${{matrix.elixir}} OTP ${{matrix.otp}}
+    strategy:
+      matrix:
+        elixir:
+          - 1.12.3
+          - 1.11.4
+        otp:
+          - 24.1
+          - 23.3
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          elixir-version: ${{matrix.elixir}}
+          otp-version: ${{matrix.otp}}
+      - run: sudo apt install redis-server
+      - run: redis-server &
+      - run: mix deps.get
+      - run: mix test
+      - run: mix coveralls

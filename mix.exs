@@ -4,12 +4,12 @@ defmodule Asapi.Mixfile do
   def project, do: [
     app: :asapi,
     version: "0.4.0",
-    elixir: "~> 1.10",
+    elixir: "~> 1.11",
     build_embedded: Mix.env == :prod,
     start_permanent: Mix.env == :prod,
     deps: deps(),
     test_coverage: [ tool: ExCoveralls ],
-    preferred_cli_env: [ "coveralls.json": :test ],
+    preferred_cli_env: [ coveralls: :test ],
     aliases: aliases()
   ]
 

@@ -1,5 +1,5 @@
 # Android Sdk Api Level
-[![Build][main]][travis]
+[![Build][shield]][build]
 
 Get Sdk Levels of Android libraries as a shield to use as a badge.
 
@@ -11,5 +11,5 @@ https://asapi.herokuapp.com
  * https://github.com/HashNuke/heroku-buildpack-elixir
 
 
-  [travis]: https://travis-ci.org/asapi/Lv
-  [main]: https://img.shields.io/travis/asapi/Lv.svg?logo=travis
+  [build]: https://github.com/asapi/Lv/actions
+  [shield]: https://img.shields.io/github/workflow/status/asapi/Lv/Build
