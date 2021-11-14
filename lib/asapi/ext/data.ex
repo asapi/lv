@@ -19,7 +19,6 @@ defmodule Asapi.Ext.Data do
   alias Asapi.Ext.Repo
   alias Asapi.Ext.Redis
 
-
   def get!(%Aar{} = aar) do
     aar = resolved! aar
     Cachex.fetch! :lvc, aar, redis_get(&Repo.load!/1, 7)
@@ -38,7 +37,6 @@ defmodule Asapi.Ext.Data do
     &Redis.get!(&1, fallback, dtl)
   end
 
-
   def clear!(%Aar{} = aar) do
     Cachex.execute :lvc, &clear!(&1, {aar})
     nil
@@ -55,13 +53,11 @@ defmodule Asapi.Ext.Data do
   defp clear?(true), do: false
   defp clear?(nil), do: true
 
-
   defp clear({%Aar{} = aar}) do
     dyn = Repo.resolve? aar
     clear_redis(aar, dyn)
     |> clear_cache(aar, dyn)
   end
-
 
   defp clear_redis(aar, _ \\ false)
 
@@ -75,11 +71,9 @@ defmodule Asapi.Ext.Data do
     revision
   end
 
-
   defp clear_cache(rev, %Aar{} = aar, dyn) do
     Cachex.execute :lvc, &clear_cache(&1, aar, dyn, rev)
   end
-
 
   defp clear_cache(worker, aar, dyn \\ false, rev \\ nil)
 

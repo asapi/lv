@@ -29,7 +29,6 @@ defmodule Asapi.Ext.Repo do
       "https://jcenter.bintray.com"
     ]
 
-
   def resolve!(%Aar{} = aar) do
     pattern = case aar.revision do
       nil -> ""
@@ -96,7 +95,6 @@ defmodule Asapi.Ext.Repo do
     end
   end
 
-
   def resolve?(%Aar{} = aar) do
     aar.revision
     |> case do
@@ -108,7 +106,6 @@ defmodule Asapi.Ext.Repo do
       rev -> String.ends_with? rev, "+"
     end
   end
-
 
   def load!(%Aar{} = aar) do
     @repos

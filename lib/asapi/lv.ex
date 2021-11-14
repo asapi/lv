@@ -28,7 +28,6 @@ defmodule Asapi.Lv do
 
   @template_root "priv/temp"
 
-
   @behaviour Plug
 
   def init(opts), do: opts
@@ -40,7 +39,6 @@ defmodule Asapi.Lv do
   end
 
   def call(%Conn{} = conn, _opts), do: conn
-
 
   defp asapi_lv(%Conn{assigns: %{asapi_aar: %Aar{} = aar, asapi_ext: :html}} = conn) do
     host = case conn.port do
@@ -73,7 +71,6 @@ defmodule Asapi.Lv do
   end
 
   defp asapi_lv(%Conn{} = conn), do: conn
-
 
   defp api_lv(%Aar{group: nil}), do: @unknown
   defp api_lv(%Aar{name: nil}), do: @unknown

@@ -23,7 +23,6 @@ defmodule Asapi.Reload do
   import Trot.Router, only: [do_redirect: 2]
   import Asapi.Util, only: [build_url: 3]
 
-
   @behaviour Plug
 
   def init(opts), do: opts
@@ -36,7 +35,6 @@ defmodule Asapi.Reload do
   end
 
   def call(%Conn{} = conn, _opts), do: conn
-
 
   defp clear_cached(%Conn{assigns: %{asapi_aar: %Aar{group: nil}}} = conn), do: conn
   defp clear_cached(%Conn{assigns: %{asapi_aar: %Aar{name: nil}}} = conn), do: conn

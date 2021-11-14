@@ -23,7 +23,6 @@ defmodule Asapi.Router do
     quote do: assign var!(conn), :asapi_aar, unquote(aar)
   end
 
-
   use Trot.Router
 
   get "/:group/:name/+" do

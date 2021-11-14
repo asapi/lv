@@ -3,8 +3,8 @@ defmodule Asapi.Mixfile do
 
   def project, do: [
     app: :asapi,
-    version: "0.3.1",
-    elixir: "~> 1.6",
+    version: "0.4.0",
+    elixir: "~> 1.10",
     build_embedded: Mix.env == :prod,
     start_permanent: Mix.env == :prod,
     deps: deps(),
@@ -19,12 +19,12 @@ defmodule Asapi.Mixfile do
 
   defp deps, do: [
     { :trot, github: "hexedpackets/trot" },
-    { :tesla, "~> 1.3.0" },
-    { :redix, "~> 0.10" },
-    { :cachex, "~> 3.2.0" },
-    { :hackney, "~> 1.15.0" },
-    { :mock, "~> 0.3", only: :test },
-    { :excoveralls, "~> 0.12", only: :test }
+    { :tesla, "~> 1.4.0" },
+    { :redix, "~> 1.1.0" },
+    { :cachex, "~> 3.4.0" },
+    { :hackney, "~> 1.18.0" },
+    { :mock, "~> 0.3.0", only: :test },
+    { :excoveralls, "~> 0.14.0", only: :test }
   ]
 
   defp aliases, do: [

@@ -35,7 +35,6 @@ defmodule Asapi.Ext.Redis do
     |> supervise(strategy: :one_for_one)
   end
 
-
   def get!(%Aar{} = aar, rcb, dtl) when is_function(rcb, 1) do
     aar
     |> to_string
@@ -60,7 +59,6 @@ defmodule Asapi.Ext.Redis do
     value
   end
 
-
   def get_and_del!(%Aar{} = aar) do
     key = to_string aar
     Redix.pipeline!(conn(), [
@@ -72,7 +70,6 @@ defmodule Asapi.Ext.Redis do
     |> List.last
     |> List.first
   end
-
 
   defp get_and_incr({ids, id}) do
     nid = id + 1

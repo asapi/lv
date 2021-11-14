@@ -23,7 +23,6 @@ defmodule Asapi.Type do
 
   def init(opts), do: opts
 
-
   def call(%Conn{state: :unset} = conn, _opts) do
     {last, ext} = split_ext conn
     conn
@@ -32,7 +31,6 @@ defmodule Asapi.Type do
   end
 
   def call(%Conn{} = conn, _opts), do: conn
-
 
   @stdext :html
 

@@ -22,7 +22,6 @@ defmodule Asapi.Aar do
   @enforce_keys [:group, :name]
   defstruct [:group, :name, :revision, :classifier]
 
-
   def sdk_levels!(aar_file) do
     info = load_manifest! aar_file
     min = sdk_ver Regex.run ~R/android:minSdkVersion="([0-9]+)"/, info
@@ -45,7 +44,6 @@ defmodule Asapi.Aar do
 
   defp sdk_ver(nil), do: nil
   defp sdk_ver([_, level]), do: String.to_integer level
-
 
   defimpl String.Chars, for: Aar do
     def to_string(aar) do
