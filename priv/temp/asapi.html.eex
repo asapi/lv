@@ -46,6 +46,14 @@
 <div style="flex-grow:1">
 <h4 style="margin-top:0">Android version history</h4>
 <p>
+<img alt="API level 33" src="https://img.shields.io/badge/API-33-green.svg">
+Android 13
+<small>[2022] T</small>
+<p>
+<img alt="API level 32" src="https://img.shields.io/badge/API-32-green.svg">
+Android 12L
+<small>[2022] S</small>
+<p>
 <img alt="API level 31" src="https://img.shields.io/badge/API-31-green.svg">
 Android 12
 <small>[2021] S</small>
@@ -85,7 +93,7 @@ Android 6.0
 <details>
 <summary>
 <img alt="API level 1 to 22" src="https://img.shields.io/badge/API-1--22-yellow.svg">
-Android 4.4 and before
+Android 5.1 and before
 <small>[2008-2015]</small>
 </summary>
 <p>
