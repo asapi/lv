@@ -25,8 +25,7 @@ defmodule Asapi.Ext.Repo do
   @repos [
       "https://maven.google.com",
       "https://repo1.maven.org/maven2",
-      "https://jitpack.io",
-      "https://jcenter.bintray.com"
+      "https://jitpack.io"
     ]
 
   def resolve!(%Aar{} = aar) do
