@@ -17,79 +17,34 @@
 defmodule Asapi.Ext.Data do
   alias Asapi.Aar
   alias Asapi.Ext.Repo
-  alias Asapi.Ext.Redis
 
   def get!(%Aar{} = aar) do
-    aar = resolved! aar
-    Cachex.fetch! :lvc, aar, redis_get(&Repo.load!/1, 7)
+    aar = get_rev! aar
+    Cachex.fetch! :lvc, aar, &Repo.load!/1
   end
 
-  defp resolved!(%Aar{} = aar) do
+  defp get_rev!(%Aar{} = aar) do
     if Repo.resolve? aar do
-      rev = Cachex.fetch! :lvc, aar, redis_get(&Repo.resolve!/1, 1)
+      rev = Cachex.fetch! :lvc, aar, &Repo.resolve!/1
       %{aar | revision: rev}
     else
       aar
-    end
-  end
-
-  defp redis_get(fallback, dtl) do
-    &Redis.get!(&1, fallback, dtl)
+    end  
   end
 
   def clear!(%Aar{} = aar) do
-    Cachex.execute :lvc, &clear!(&1, {aar})
+    aar = clear_rev! aar  
+    Cachex.del :lvc, aar
     nil
   end
 
-  defp clear!(worker, {%Aar{}} = aar) do
-    if Cachex.get_and_update! worker, aar, &clear?/1 do
-      Cachex.expire! worker, aar, :timer.minutes(3)
-      clear aar
-    end
-  end
-
-  defp clear?(false), do: { :ignore, false }
-  defp clear?(true), do: false
-  defp clear?(nil), do: true
-
-  defp clear({%Aar{} = aar}) do
-    dyn = Repo.resolve? aar
-    clear_redis(aar, dyn)
-    |> clear_cache(aar, dyn)
-  end
-
-  defp clear_redis(aar, _ \\ false)
-
-  defp clear_redis(%Aar{} = aar, false) do
-    Redis.get_and_del! aar
-  end
-
-  defp clear_redis(%Aar{} = aar, true) do
-    revision = clear_redis aar
-    clear_redis %{aar | revision: revision}
-    revision
-  end
-
-  defp clear_cache(rev, %Aar{} = aar, dyn) do
-    Cachex.execute :lvc, &clear_cache(&1, aar, dyn, rev)
-  end
-
-  defp clear_cache(worker, aar, dyn \\ false, rev \\ nil)
-
-  defp clear_cache(worker, %Aar{} = aar, false, _) do
-    {_, revision} = Cachex.get worker, aar
-    Cachex.del worker, aar
-    revision
-  end
-
-  defp clear_cache(worker, %Aar{} = aar, true, rev) do
-    revision = clear_cache worker, aar
-    case rev do
-      nil -> nil
-      ^revision -> nil
-      _ -> clear_cache worker, %{aar | revision: rev}
-    end
-    clear_cache worker, %{aar | revision: revision}
+  def clear_rev!(%Aar{} = aar) do
+    if Repo.resolve? aar do
+      rev = Cachex.get! :lvc, aar
+      Cachex.del :lvc, aar
+      %{aar | revision: rev}
+    else
+      aar
+    end    
   end
 end
