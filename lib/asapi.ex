@@ -27,7 +27,7 @@ defmodule Asapi do
   end
 
   defp shield(status, color) do
-    "https://img.shields.io/badge/API-#{encode status}-#{color}"
+    "https://img.shields.io/badge/API-#{encode(status)}-#{color}"
   end
 
   defp encode(part) do

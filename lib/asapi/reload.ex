@@ -41,10 +41,12 @@ defmodule Asapi.Reload do
 
   defp clear_cached(%Conn{assigns: %{asapi_aar: %Aar{} = aar}} = conn) do
     try do
-      Data.clear! aar
-    rescue error ->
-      Logger.warn Exception.message error
+      Data.clear!(aar)
+    rescue
+      error ->
+        Logger.warn(Exception.message(error))
     end
+
     conn
   end
 

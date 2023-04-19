@@ -25,43 +25,55 @@ defmodule Asapi.TypeTest do
   end
 
   test "call returns conn with state not :unset" do
-    conn = conn(:get, "/foo")
-    |> Map.put(:state, :set)
-    |> put_private(:test, :value)
+    conn =
+      conn(:get, "/foo")
+      |> Map.put(:state, :set)
+      |> put_private(:test, :value)
+
     assert Type.call(conn, nil) == conn
   end
 
   test "call sets html extension as default" do
-    conn = conn(:get, "/foo")
-    |> Type.call(nil)
+    conn =
+      conn(:get, "/foo")
+      |> Type.call(nil)
+
     assert conn.assigns[:asapi_ext] == :html
     assert conn.path_info == ["foo"]
   end
 
   test "call sets html extension as no extension" do
-    conn = conn(:get, "/foo@")
-    |> Type.call(nil)
+    conn =
+      conn(:get, "/foo@")
+      |> Type.call(nil)
+
     assert conn.assigns[:asapi_ext] == :html
     assert conn.path_info == ["foo"]
   end
 
   test "call sets extension" do
-    conn = conn(:get, "/foo@svg")
-    |> Type.call(nil)
+    conn =
+      conn(:get, "/foo@svg")
+      |> Type.call(nil)
+
     assert conn.assigns[:asapi_ext] == :svg
     assert conn.path_info == ["foo"]
   end
 
   test "call sets first extension only" do
-    conn = conn(:get, "/foo@txt@svg")
-    |> Type.call(nil)
+    conn =
+      conn(:get, "/foo@txt@svg")
+      |> Type.call(nil)
+
     assert conn.assigns[:asapi_ext] == :txt
     assert conn.path_info == ["foo"]
   end
 
   test "call removes empty path info" do
-    conn = conn(:get, "/@html")
-    |> Type.call(nil)
+    conn =
+      conn(:get, "/@html")
+      |> Type.call(nil)
+
     assert conn.assigns[:asapi_ext] == :html
     assert conn.path_info == []
   end

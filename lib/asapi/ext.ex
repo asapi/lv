@@ -15,13 +15,13 @@
 #   along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 defmodule Asapi.Ext do
-  @day :timer.hours 24
+  @day :timer.hours(24)
 
   def start(_type, _args) do
-    Cachex.start_link :lvc, [
+    Cachex.start_link(:lvc,
       disable_ode: false,
       default_ttl: @day * 7,
       ttl_interval: @day
-    ]
+    )
   end
 end

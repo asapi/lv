@@ -25,23 +25,29 @@ defmodule Asapi.LibraryTest do
   end
 
   test "call fetches query params" do
-    conn = conn(:get, "/foo")
-    |> put_private(:test, :value)
-    |> Library.call(nil)
+    conn =
+      conn(:get, "/foo")
+      |> put_private(:test, :value)
+      |> Library.call(nil)
+
     assert conn.params == %{}
     assert conn.query_params == %{}
   end
 
   test "call returns conn without library param" do
-    conn = conn(:get, "/foo")
-    |> put_private(:test, :value)
-    |> fetch_query_params
+    conn =
+      conn(:get, "/foo")
+      |> put_private(:test, :value)
+      |> fetch_query_params
+
     assert Library.call(conn, nil) == conn
   end
 
   test "call redirects conn with library param" do
-    conn = conn(:get, "/foo?library=bar")
-    |> Library.call(nil)
+    conn =
+      conn(:get, "/foo?library=bar")
+      |> Library.call(nil)
+
     assert {"location", "/bar"} in conn.resp_headers
   end
 end

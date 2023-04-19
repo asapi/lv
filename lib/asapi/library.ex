@@ -32,7 +32,7 @@ defmodule Asapi.Library do
 
   defp handle(%Conn{query_params: %{"library" => lib}} = conn) do
     conn
-    |> build_url("/#{String.replace lib, ":", "/"}", ["library"])
+    |> build_url("/#{String.replace(lib, ":", "/")}", ["library"])
     |> do_redirect(conn)
   end
 

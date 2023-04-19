@@ -34,13 +34,16 @@ defmodule Asapi.Ext.VersionTest do
 
   test "parse! x[.x[.x[.*]]] to version" do
     assert Version.parse!("1") ==
-        %Version{major: 1, s: "1"}
+             %Version{major: 1, s: "1"}
+
     assert Version.parse!("1.2") ==
-        %Version{major: 1, minor: 2, s: "1.2"}
+             %Version{major: 1, minor: 2, s: "1.2"}
+
     assert Version.parse!("1.2.3") ==
-        %Version{major: 1, minor: 2, rev: 3, s: "1.2.3"}
+             %Version{major: 1, minor: 2, rev: 3, s: "1.2.3"}
+
     assert Version.parse!("1.2.3.4") ==
-        %Version{major: 1, minor: 2, rev: 3, s: "1.2.3.4"}
+             %Version{major: 1, minor: 2, rev: 3, s: "1.2.3.4"}
   end
 
   test "parse! fail on non x[.x[.x[.*]]]" do

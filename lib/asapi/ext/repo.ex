@@ -19,34 +19,36 @@ defmodule Asapi.Ext.Repo do
   alias Asapi.Aar
   use Tesla
 
-  plug Tesla.Middleware.FollowRedirects
-  plug Tesla.Middleware.Retry, max_retries: 3
+  plug(Tesla.Middleware.FollowRedirects)
+  plug(Tesla.Middleware.Retry, max_retries: 3)
 
   @repos [
-      "https://maven.google.com",
-      "https://repo1.maven.org/maven2",
-      "https://jitpack.io"
-    ]
+    "https://maven.google.com",
+    "https://repo1.maven.org/maven2",
+    "https://jitpack.io"
+  ]
 
   def resolve!(%Aar{} = aar) do
-    pattern = case aar.revision do
-      nil -> ""
-      "" -> ""
-      "latest.integration" ->  ""
-      "latest.milestone" ->  ""
-      "latest.release" ->  ""
-      rev -> String.slice(rev, 0..-2)
-    end
+    pattern =
+      case aar.revision do
+        nil -> ""
+        "" -> ""
+        "latest.integration" -> ""
+        "latest.milestone" -> ""
+        "latest.release" -> ""
+        rev -> String.slice(rev, 0..-2)
+      end
+
     @repos
     |> Enum.flat_map(&versions(aar, &1))
     |> Enum.filter(&Version.matching?(pattern, &1))
     |> Enum.sort(&Version.<=/2)
-    |> List.last
+    |> List.last()
     |> Map.get(:s)
   end
 
   defp module(repo, %Aar{} = aar) do
-    "#{repo}/#{String.replace aar.group, ".", "/"}/#{aar.name}"
+    "#{repo}/#{String.replace(aar.group, ".", "/")}/#{aar.name}"
   end
 
   defp metadata(module) do
@@ -54,7 +56,7 @@ defmodule Asapi.Ext.Repo do
   end
 
   defp aar_file(module, %Aar{} = aar) do
-    aar_file module, aar.revision, aar
+    aar_file(module, aar.revision, aar)
   end
 
   defp aar_file(module, revision, %Aar{classifier: nil} = aar) do
@@ -86,11 +88,12 @@ defmodule Asapi.Ext.Repo do
   defp version(lib) do
     try do
       lib
-      |> List.last
-      |> String.trim
-      |> Version.parse!
-    rescue _ ->
-      nil
+      |> List.last()
+      |> String.trim()
+      |> Version.parse!()
+    rescue
+      _ ->
+        nil
     end
   end
 
@@ -102,14 +105,14 @@ defmodule Asapi.Ext.Repo do
       "latest.integration" -> true
       "latest.milestone" -> true
       "latest.release" -> true
-      rev -> String.ends_with? rev, "+"
+      rev -> String.ends_with?(rev, "+")
     end
   end
 
   def load!(%Aar{} = aar) do
     @repos
     |> Enum.reduce_while(nil, &load_aar_file!(&1, aar, &2))
-    |> Aar.sdk_levels!
+    |> Aar.sdk_levels!()
   end
 
   defp load_aar_file!(repo, %Aar{} = aar, _) do
@@ -118,7 +121,7 @@ defmodule Asapi.Ext.Repo do
     |> get!
     |> load_aar_file
   end
-    
+
   defp load_aar_file(response) do
     if response.status in 200..299 do
       {:halt, response.body}

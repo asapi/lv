@@ -31,61 +31,77 @@ defmodule Asapi.ReloadTest do
   end
 
   test "call returns conn without reload param" do
-    conn = conn(:get, "/foo")
-    |> put_private(:test, :value)
-    |> fetch_query_params
+    conn =
+      conn(:get, "/foo")
+      |> put_private(:test, :value)
+      |> fetch_query_params
+
     assert Reload.call(conn, nil) == conn
   end
 
   test_with_mock "call ignores unset aar and redirects",
-        Data, [clear!: fn _ -> raise "error" end] do
-    conn = conn(:get, "/foo?reload")
-    |> put_private(:test, :value)
-    |> fetch_query_params
+                 Data,
+                 clear!: fn _ -> raise "error" end do
+    conn =
+      conn(:get, "/foo?reload")
+      |> put_private(:test, :value)
+      |> fetch_query_params
+
     assert_redirect(conn, "/foo")
-    refute called Data.clear! @aar
+    refute called(Data.clear!(@aar))
   end
 
   test_with_mock "call ignores aar with invalid group and redirects",
-        Data, [clear!: fn _ -> nil end] do
-    conn = conn(:get, "/foo?reload")
-    |> put_private(:test, :value)
-    |> fetch_query_params
-    |> assign(:asapi_aar, %{@aar | group: nil})
+                 Data,
+                 clear!: fn _ -> nil end do
+    conn =
+      conn(:get, "/foo?reload")
+      |> put_private(:test, :value)
+      |> fetch_query_params
+      |> assign(:asapi_aar, %{@aar | group: nil})
+
     assert_redirect(conn, "/foo")
-    refute called Data.clear! @aar
+    refute called(Data.clear!(@aar))
   end
 
   test_with_mock "call ignores aar with invalid name and redirects",
-        Data, [clear!: fn _ -> nil end] do
-    conn = conn(:get, "/foo?reload")
-    |> put_private(:test, :value)
-    |> fetch_query_params
-    |> assign(:asapi_aar, %{@aar | name: nil})
+                 Data,
+                 clear!: fn _ -> nil end do
+    conn =
+      conn(:get, "/foo?reload")
+      |> put_private(:test, :value)
+      |> fetch_query_params
+      |> assign(:asapi_aar, %{@aar | name: nil})
+
     assert_redirect(conn, "/foo")
-    refute called Data.clear! @aar
+    refute called(Data.clear!(@aar))
   end
 
   test_with_mock "call clears cached values and redirects",
-        Data, [clear!: fn _ -> nil end] do
-    conn = conn(:get, "/foo?reload")
-    |> put_private(:test, :value)
-    |> fetch_query_params
-    |> assign(:asapi_aar, @aar)
+                 Data,
+                 clear!: fn _ -> nil end do
+    conn =
+      conn(:get, "/foo?reload")
+      |> put_private(:test, :value)
+      |> fetch_query_params
+      |> assign(:asapi_aar, @aar)
+
     assert_redirect(conn, "/foo")
-    assert called Data.clear! @aar
+    assert called(Data.clear!(@aar))
   end
 
   test_with_mock "call logs message on clear! error and redirects",
-        Data, [clear!: fn _ -> raise "error" end] do
-    conn = conn(:get, "/foo?reload")
-    |> put_private(:test, :value)
-    |> fetch_query_params
-    |> assign(:asapi_aar, @aar)
-    assert capture_log(fn -> assert_redirect(conn, "/foo") end) =~ "error"
-    assert called Data.clear! @aar
-  end
+                 Data,
+                 clear!: fn _ -> raise "error" end do
+    conn =
+      conn(:get, "/foo?reload")
+      |> put_private(:test, :value)
+      |> fetch_query_params
+      |> assign(:asapi_aar, @aar)
 
+    assert capture_log(fn -> assert_redirect(conn, "/foo") end) =~ "error"
+    assert called(Data.clear!(@aar))
+  end
 
   defp assert_redirect(conn, path) do
     assert {"location", path} in Reload.call(conn, nil).resp_headers

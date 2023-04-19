@@ -23,12 +23,13 @@ defmodule Asapi.Aar do
   defstruct [:group, :name, :revision, :classifier]
 
   def sdk_levels!(aar_file) do
-    info = load_manifest! aar_file
-    min = sdk_ver Regex.run ~R/android:minSdkVersion="([0-9]+)"/, info
-    max = sdk_ver Regex.run ~R/android:maxSdkVersion="([0-9]+)"/, info
+    info = load_manifest!(aar_file)
+    min = sdk_ver(Regex.run(~R/android:minSdkVersion="([0-9]+)"/, info))
+    max = sdk_ver(Regex.run(~R/android:maxSdkVersion="([0-9]+)"/, info))
+
     case {min, max} do
       {nil, nil} -> "1+"
-      {sdk, sdk} -> to_string sdk
+      {sdk, sdk} -> to_string(sdk)
       {min_sdk, nil} -> "#{min_sdk}+"
       {nil, max_sdk} -> "1-#{max_sdk}"
       {min_sdk, max_sdk} -> "#{min_sdk}-#{max_sdk}"
@@ -43,23 +44,28 @@ defmodule Asapi.Aar do
   end
 
   defp sdk_ver(nil), do: nil
-  defp sdk_ver([_, level]), do: String.to_integer level
+  defp sdk_ver([_, level]), do: String.to_integer(level)
 
   defimpl String.Chars, for: Aar do
     def to_string(aar) do
       case aar do
         %Aar{group: nil} ->
-            nil
+          nil
+
         %Aar{name: nil} ->
-            nil
+          nil
+
         %Aar{revision: nil, classifier: nil} ->
-            "#{aar.group}:#{aar.name}:+"
+          "#{aar.group}:#{aar.name}:+"
+
         %Aar{revision: nil} ->
-            "#{aar.group}:#{aar.name}:+:#{aar.classifier}"
+          "#{aar.group}:#{aar.name}:+:#{aar.classifier}"
+
         %Aar{classifier: nil} ->
-            "#{aar.group}:#{aar.name}:#{aar.revision}"
+          "#{aar.group}:#{aar.name}:#{aar.revision}"
+
         _ ->
-            "#{aar.group}:#{aar.name}:#{aar.revision}:#{aar.classifier}"
+          "#{aar.group}:#{aar.name}:#{aar.revision}:#{aar.classifier}"
       end
     end
   end

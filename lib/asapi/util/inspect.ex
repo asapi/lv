@@ -17,5 +17,5 @@
 defmodule Asapi.Util.Inspect do
   @behaviour Plug
   def init(opts), do: opts
-  def call(%Plug.Conn{} = conn, _opts), do: IO.inspect conn
+  def call(%Plug.Conn{} = conn, _opts), do: IO.inspect(conn)
 end

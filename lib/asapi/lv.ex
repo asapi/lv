@@ -41,26 +41,32 @@ defmodule Asapi.Lv do
   def call(%Conn{} = conn, _opts), do: conn
 
   defp asapi_lv(%Conn{assigns: %{asapi_aar: %Aar{} = aar, asapi_ext: :html}} = conn) do
-    host = case conn.port do
-      80 -> conn.host
-      443 -> conn.host
-      port -> "#{conn.host}:#{port}"
-    end
-    path = case Enum.join(conn.path_info, "/") do
-      "" -> "/"
-      path -> "/#{path}"
-    end
-    render_template "asapi.html.eex",
+    host =
+      case conn.port do
+        80 -> conn.host
+        443 -> conn.host
+        port -> "#{conn.host}:#{port}"
+      end
+
+    path =
+      case Enum.join(conn.path_info, "/") do
+        "" -> "/"
+        path -> "/#{path}"
+      end
+
+    render_template("asapi.html.eex",
       host: host,
       path: path,
       lib: to_string(aar),
       api: api_lv(aar),
       loading: "#{shield(@loading)}.svg"
+    )
   end
 
-  defp asapi_lv(%Conn{assigns: %{asapi_aar: aar, asapi_ext: type}} = conn) when type in [:png, :svg] do
+  defp asapi_lv(%Conn{assigns: %{asapi_aar: aar, asapi_ext: type}} = conn)
+       when type in [:png, :svg] do
     conn
-    |> build_url("#{shield(api_lv aar)}.#{type}")
+    |> build_url("#{shield(api_lv(aar))}.#{type}")
     |> redirect_to
   end
 
@@ -77,13 +83,14 @@ defmodule Asapi.Lv do
 
   defp api_lv(%Aar{} = aar) do
     try do
-      case Data.get! aar do
+      case Data.get!(aar) do
         nil -> @unknown
         lv -> lv
       end
-    rescue error ->
-      Logger.warn Exception.message error
-      @unknown
+    rescue
+      error ->
+        Logger.warn(Exception.message(error))
+        @unknown
     end
   end
 end

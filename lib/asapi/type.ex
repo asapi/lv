@@ -24,7 +24,8 @@ defmodule Asapi.Type do
   def init(opts), do: opts
 
   def call(%Conn{state: :unset} = conn, _opts) do
-    {last, ext} = split_ext conn
+    {last, ext} = split_ext(conn)
+
     conn
     |> assign(:asapi_ext, ext)
     |> Map.update!(:path_info, update_path_info(last))
@@ -38,7 +39,7 @@ defmodule Asapi.Type do
 
   defp split_ext(%Conn{} = conn) do
     conn.path_info
-    |> List.last
+    |> List.last()
     |> String.split("@")
     |> case do
       [last] -> {last, @stdext}
