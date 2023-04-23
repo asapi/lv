@@ -1,0 +1,20 @@
+name: Deploy
+
+on: workflow_dispatch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: asapi
+    steps:
+      - uses: actions/checkout@v3
+      - run: git remote add release "https://$USERNAME:$PASSWORD@git.gigalixir.com/asapi.git"
+        env:
+          USERNAME: ${{ secrets.GIGALIXIR_USERNAME }}
+          PASSWORD: ${{ secrets.GIGALIXIR_PASSWORD }}
+      - run: |
+          git config --global user.name $GITHUB_ACTOR
+          git config --global user.email $GITHUB_ACTOR_ID+$GITHUB_ACTOR@users.noreply.github.com
+          git checkout --orphan deploy
+          git commit -m "deploy current HEAD"
+          git push -f release HEAD:master
