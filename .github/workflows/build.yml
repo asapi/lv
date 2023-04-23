@@ -34,3 +34,9 @@ jobs:
       - run: mix format --check-formatted
       - run: mix test
       - run: mix coveralls
+
+  deploy:
+    needs: build
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    uses: ./.github/workflows/deploy.yml
+    secrets: inherit

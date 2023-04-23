@@ -1,0 +1,18 @@
+{
+    "devDependencies": {
+        "parcel": "latest"
+    },
+    "scripts": {
+        "build": "parcel build"
+    },
+    "targets": {
+        "assets": {
+            "distDir": "static",
+            "source": [
+                "src/form.js",
+                "src/style.css"
+            ],
+            "sourceMap": false
+        }
+    }
+}

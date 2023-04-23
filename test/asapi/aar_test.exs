@@ -1,18 +1,5 @@
-#   asapi/lv
-#   Copyright (C) 2017  tynn
-#
-#   This program is free software: you can redistribute it and/or modify
-#   it under the terms of the GNU Affero General Public License as published by
-#   the Free Software Foundation, either version 3 of the License, or
-#   (at your option) any later version.
-#
-#   This program is distributed in the hope that it will be useful,
-#   but WITHOUT ANY WARRANTY; without even the implied warranty of
-#   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#   GNU Affero General Public License for more details.
-#
-#   You should have received a copy of the GNU Affero General Public License
-#   along with this program. If not, see <http://www.gnu.org/licenses/>.
+#  Copyright 2017 Christian Schmitz
+#  SPDX-License-Identifier: AGPL-3.0-or-later
 
 defmodule Asapi.AarTest do
   use ExUnit.Case
@@ -49,22 +36,22 @@ defmodule Asapi.AarTest do
   end
 
   test "sdk_levels! returns 1+ without any sdks" do
-    assert Aar.sdk_levels!(File.read!("etc/lv1-0.0-all.aar")) == "1+"
+    assert Aar.sdk_levels!(File.read!("test/aar/lv1-0.0-all.aar")) == "1+"
   end
 
   test "sdk_levels! returns range for different min and max sdks" do
-    assert Aar.sdk_levels!(File.read!("etc/lv13-0.0.aar")) == "13-22"
+    assert Aar.sdk_levels!(File.read!("test/aar/lv13-0.0.aar")) == "13-22"
   end
 
   test "sdk_levels! returns open range for min sdk" do
-    assert Aar.sdk_levels!(File.read!("etc/lv21-0.0.aar")) == "21+"
+    assert Aar.sdk_levels!(File.read!("test/aar/lv21-0.0.aar")) == "21+"
   end
 
   test "sdk_levels! returns single value for equal min and max sdks" do
-    assert Aar.sdk_levels!(File.read!("etc/lv22-0.0.aar")) == "22"
+    assert Aar.sdk_levels!(File.read!("test/aar/lv22-0.0.aar")) == "22"
   end
 
   test "sdk_levels! returns closed range from 1 for single max sdk" do
-    assert Aar.sdk_levels!(File.read!("etc/lv23-0.0.aar")) == "1-23"
+    assert Aar.sdk_levels!(File.read!("test/aar/lv23-0.0.aar")) == "1-23"
   end
 end

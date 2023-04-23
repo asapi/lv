@@ -1,9 +1,10 @@
+.parcel-cache/
+node_modules/
 /_build
 /cover
 /deps
 /doc
-/bin/.gradle/
-/bin/build/
+package-lock.json
 erl_crash.dump
 *.ez
 .DS_Store

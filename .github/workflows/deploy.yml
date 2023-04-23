@@ -1,6 +1,7 @@
 name: Deploy
 
-on: workflow_dispatch
+on: [workflow_call, workflow_dispatch]
+
 
 jobs:
   deploy:
@@ -12,7 +13,8 @@ jobs:
         env:
           USERNAME: ${{ secrets.GIGALIXIR_USERNAME }}
           PASSWORD: ${{ secrets.GIGALIXIR_PASSWORD }}
-      - run: |
+      - name: Run git push -f release HEAD:master
+        run: |
           git config --global user.name $GITHUB_ACTOR
           git config --global user.email $GITHUB_ACTOR_ID+$GITHUB_ACTOR@users.noreply.github.com
           git checkout --orphan deploy
