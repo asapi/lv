@@ -57,6 +57,13 @@ defmodule Asapi.Lv do
     |> redirect_to
   end
 
+  defp asapi_lv(%Conn{assigns: %{asapi_aar: aar, asapi_ext: :json}}) do
+    aar
+    |> api_lv
+    |> shield(json: true)
+    |> send_json
+  end
+
   defp asapi_lv(%Conn{assigns: %{asapi_aar: aar, asapi_ext: :txt}}) do
     aar
     |> api_lv

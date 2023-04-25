@@ -20,5 +20,7 @@ defmodule Asapi.Util do
 
   def redirect_to(url), do: {:redirect, url}
 
+  def send_json(json), do: {:ok, json, ["content-type": "application/json"]}
+
   def send_text(text), do: {:ok, text, ["content-type": "text/plain"]}
 end

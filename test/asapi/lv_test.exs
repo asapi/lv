@@ -167,6 +167,27 @@ defmodule Asapi.LvTest do
     assert {"location", "#{shield("12+")}.svg"} in conn.resp_headers
   end
 
+  test "call returns json to with unknown api level" do
+    conn =
+      conn(:get, "/foo")
+      |> assign(:asapi_aar, %{@aar | group: nil})
+      |> assign(:asapi_ext, :json)
+      |> Lv.call(nil)
+
+    assert conn.resp_body == shield(@unknown, json: true)
+  end
+
+  test_with_mock "call returns json to with api level", Data, get!: fn _ -> "13+" end do
+    conn =
+      conn(:get, "/foo")
+      |> assign(:asapi_aar, @aar)
+      |> assign(:asapi_ext, :json)
+      |> Lv.call(nil)
+
+    assert called(Data.get!(@aar))
+    assert conn.resp_body == shield("13+", json: true)
+  end
+
   test "call returns txt to with unknown api level" do
     conn =
       conn(:get, "/foo")

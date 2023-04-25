@@ -5,16 +5,20 @@ defmodule Asapi do
   @loading "…"
   @unknown "unknown"
 
-  def shield(status) when status in [@loading, @unknown] do
-    shield(status, "inactive")
+  def shield(status, json \\ false) when status in [@loading, @unknown] do
+    shield(status, "inactive", json)
   end
 
-  def shield(status) do
-    shield(status, "informational")
+  def shield(status, json) do
+    shield(status, "informational", json)
   end
 
-  defp shield(status, color) do
-    "https://img.shields.io/badge/API-#{encode(status)}-#{color}"
+  defp shield(status, color, json) do
+    unless json do
+      "https://img.shields.io/badge/API-#{encode(status)}-#{color}"
+    else
+      "{\"schemaVersion\":1,\"label\":\"API\",\"message\":\"#{status}\",\"color\":\"#{color}\"}"
+    end
   end
 
   defp encode(part) do
