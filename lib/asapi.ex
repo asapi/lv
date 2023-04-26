@@ -1,35 +1,21 @@
-#  Copyright 2017 Christian Schmitz
+#  Copyright 2023 Christian Schmitz
 #  SPDX-License-Identifier: AGPL-3.0-or-later
 
 defmodule Asapi do
-  @loading "…"
-  @unknown "unknown"
+  use Application
 
-  def shield(status, json \\ false) when status in [@loading, @unknown] do
-    shield(status, "inactive", json)
-  end
+  @impl true
+  def start(_type, _args) do
+    cowboy_options = [
+      compress: true,
+      port: Application.get_env(:asapi, :port, 4000)
+    ]
 
-  def shield(status, json) do
-    shield(status, "informational", json)
-  end
+    children = [
+      Asapi.Ext,
+      {Plug.Cowboy, scheme: :http, plug: Asapi.Router, options: cowboy_options}
+    ]
 
-  defp shield(status, color, json) do
-    unless json do
-      "https://img.shields.io/badge/API-#{encode(status)}-#{color}"
-    else
-      "{\"schemaVersion\":1,\"label\":\"API\",\"message\":\"#{status}\",\"color\":\"#{color}\"}"
-    end
-  end
-
-  defp encode(part) do
-    String.replace(part, "-", "--")
-  end
-
-  defmacro __using__(_) do
-    quote do
-      import Asapi
-      @loading unquote(@loading)
-      @unknown unquote(@unknown)
-    end
+    Supervisor.start_link(children, strategy: :one_for_one)
   end
 end

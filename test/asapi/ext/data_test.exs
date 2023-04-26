@@ -3,8 +3,11 @@
 
 defmodule Asapi.Ext.DataTest do
   use ExUnit.Case
+
   alias Asapi.Aar
   alias Asapi.Ext.Data
+
+  doctest Data
 
   @aar0 %Aar{group: "any.group", name: "lv13", revision: "0.1"}
   @aar1 %{@aar0 | revision: "0.0"}

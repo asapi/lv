@@ -4,11 +4,14 @@
 defmodule Asapi.RouterTest do
   use ExUnit.Case
   use Plug.Test
-  import Mock
+
   alias Asapi.Aar
   alias Asapi.Router
   alias Asapi.Ext.Data
+
   doctest Router
+
+  import Mock
 
   setup_with_mocks([{Data, [], [get!: fn _ -> "1+" end]}]) do
     :ok
@@ -78,7 +81,6 @@ defmodule Asapi.RouterTest do
   end
 
   defp assert_aar(conn, g, n, r \\ nil, c \\ nil) do
-    assert conn.assigns[:asapi_aar] ==
-             %Aar{group: g, name: n, revision: r, classifier: c}
+    assert conn.assigns[:asapi_aar] == %Aar{group: g, name: n, revision: r, classifier: c}
   end
 end

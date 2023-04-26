@@ -4,8 +4,8 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<link rel="icon" href="favicon.svg">
-<link rel=”mask-icon” href=favicon.svg” color=”#007ec6">
+<link rel=”mask-icon” href="/favicon.svg" color="#007ec6">
+<link rel="icon" href="/favicon.svg">
 <link rel="stylesheet" type="text/css" href="/style.css">
 <script src="/form.js"></script>
 <title>Android SDK API level <%=if @lib do "- #{@lib}" end%></title>
@@ -30,25 +30,29 @@
 <div style="flex-grow:1">
 <h4 style="margin-top:0">Android version history</h4>
 <p>
+<img alt="API level 34" src="https://img.shields.io/badge/API-34-lightgrey.svg">
+Android 14 Beta
+<small>[2023] Upside Down Cake</small>
+<p>
 <img alt="API level 33" src="https://img.shields.io/badge/API-33-green.svg">
 Android 13
-<small>[2022] T</small>
+<small>[2022] Tiramisu</small>
 <p>
 <img alt="API level 32" src="https://img.shields.io/badge/API-32-green.svg">
 Android 12L
-<small>[2022] S</small>
+<small>[2022] Snow Cone</small>
 <p>
 <img alt="API level 31" src="https://img.shields.io/badge/API-31-green.svg">
 Android 12
-<small>[2021] S</small>
+<small>[2021] Snow Cone</small>
 <p>
 <img alt="API level 30" src="https://img.shields.io/badge/API-30-green.svg">
 Android 11
-<small>[2020] R</small>
+<small>[2020] Red Velvet Cake</small>
 <p>
 <img alt="API level 29" src="https://img.shields.io/badge/API-29-green.svg">
 Android 10
-<small>[2019] Q</small>
+<small>[2019] Quince Tart</small>
 <p>
 <img alt="API level 28" src="https://img.shields.io/badge/API-28-green.svg">
 Android 9
@@ -187,7 +191,7 @@ Android 1.0
 <div><h4>References</h4><ul>
 <li><a href="https://shields.io/#your-badge">shields.io</a>
 <li><a href="https://developer.android.com/about/index.html">Android</a>
-<li><a href="https://android-arsenal.com/api">Versions</a>
+<li><a href="https://developer.android.com/tools/releases/platforms">Versions</a>
 <li><a href="https://daringfireball.net/projects/markdown/syntax#img">Markdown</a>
 </ul></div>
 <div><h4>Contribute</h4><ul>
@@ -200,5 +204,5 @@ asapi/lv</a>
 </div>
 <hr>
 <p style="text-align:right">
-<small>&copy; 2017 &emsp; tynn &emsp; &hearts; Berlin</small>
+<small>&copy; 2017-2023 &emsp; tynn &emsp; Mainz &hearts; Berlin</small>
 </div>

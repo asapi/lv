@@ -1,5 +1,5 @@
-// Copyright 2017 Christian Schmitz
-// SPDX-License-Identifier: AGPL-3.0-or-later
+//  Copyright 2017 Christian Schmitz
+//  SPDX-License-Identifier: AGPL-3.0-or-later
 
 π = (lib, host, loadingSrc) => {
     function getPageTitle(lib) {

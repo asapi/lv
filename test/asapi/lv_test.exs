@@ -4,13 +4,16 @@
 defmodule Asapi.LvTest do
   use ExUnit.Case
   use Plug.Test
-  use Asapi
-  import Mock
-  import ExUnit.CaptureLog
+  use Asapi.Shield
+
   alias Asapi.Lv
   alias Asapi.Aar
   alias Asapi.Ext.Data
+
   doctest Lv
+
+  import ExUnit.CaptureLog
+  import Mock
 
   @aar %Aar{group: "any.group", name: "lv13", revision: "0.0"}
 
@@ -38,7 +41,7 @@ defmodule Asapi.LvTest do
   test "call renders html with default host and unknown" do
     conn =
       conn(:get, "/foo")
-      |> assign(:asapi_aar, %{@aar | group: nil})
+      |> assign(:asapi_aar, %{@aar | name: nil})
       |> assign(:asapi_ext, :html)
       |> Lv.call(nil)
 
@@ -47,9 +50,7 @@ defmodule Asapi.LvTest do
     assert conn.resp_body =~ @unknown
   end
 
-  test_with_mock "call renders html with default host",
-                 Data,
-                 get!: fn _ -> "1+" end do
+  test_with_mock "call renders html with default host", Data, get!: fn _ -> "1+" end do
     conn =
       conn(:get, "/foo")
       |> assign(:asapi_aar, @aar)
@@ -76,9 +77,7 @@ defmodule Asapi.LvTest do
     assert conn.resp_body =~ @unknown
   end
 
-  test_with_mock "call renders html with default https host",
-                 Data,
-                 get!: fn _ -> "2+" end do
+  test_with_mock "call renders html with default https host", Data, get!: fn _ -> "2+" end do
     conn =
       conn(:get, "/foo")
       |> Map.put(:port, 443)
@@ -93,11 +92,12 @@ defmodule Asapi.LvTest do
     assert conn.resp_body =~ "2+"
   end
 
-  test "call renders html with default host and port and unknown" do
+  test_with_mock "call renders html with default host and port and unknown", Data,
+    get!: fn _ -> nil end do
     conn =
       conn(:get, "/foo")
       |> Map.put(:port, 123)
-      |> assign(:asapi_aar, %{@aar | group: nil})
+      |> assign(:asapi_aar, @aar)
       |> assign(:asapi_ext, :html)
       |> Lv.call(nil)
 
@@ -105,9 +105,7 @@ defmodule Asapi.LvTest do
     assert conn.resp_body =~ @unknown
   end
 
-  test_with_mock "call renders html with host and port",
-                 Data,
-                 get!: fn _ -> "3+" end do
+  test_with_mock "call renders html with host and port", Data, get!: fn _ -> "3+" end do
     conn =
       conn(:get, "/foo")
       |> Map.put(:port, 123)
@@ -131,9 +129,7 @@ defmodule Asapi.LvTest do
     assert {"location", "#{shield(@unknown)}.png"} in conn.resp_headers
   end
 
-  test_with_mock "call redirects png shields with api level",
-                 Data,
-                 get!: fn _ -> "11+" end do
+  test_with_mock "call redirects png shields with api level", Data, get!: fn _ -> "11+" end do
     conn =
       conn(:get, "/foo")
       |> assign(:asapi_aar, @aar)
@@ -154,9 +150,7 @@ defmodule Asapi.LvTest do
     assert {"location", "#{shield(@unknown)}.svg"} in conn.resp_headers
   end
 
-  test_with_mock "call redirects svg shields with api level",
-                 Data,
-                 get!: fn _ -> "12+" end do
+  test_with_mock "call redirects svg shields with api level", Data, get!: fn _ -> "12+" end do
     conn =
       conn(:get, "/foo")
       |> assign(:asapi_aar, @aar)
@@ -198,9 +192,7 @@ defmodule Asapi.LvTest do
     assert conn.resp_body == @unknown
   end
 
-  test_with_mock "call returns txt to with api level",
-                 Data,
-                 get!: fn _ -> "13+" end do
+  test_with_mock "call returns txt to with api level", Data, get!: fn _ -> "13+" end do
     conn =
       conn(:get, "/foo")
       |> assign(:asapi_aar, @aar)
@@ -211,9 +203,8 @@ defmodule Asapi.LvTest do
     assert conn.resp_body == "13+"
   end
 
-  test_with_mock "call processes unknown api level on error",
-                 Data,
-                 get!: fn _ -> raise "error" end do
+  test_with_mock "call processes unknown api level on error", Data,
+    get!: fn _ -> raise "error" end do
     fun = fn ->
       conn =
         conn(:get, "/foo")

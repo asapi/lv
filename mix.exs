@@ -1,36 +1,31 @@
 defmodule Asapi.Mixfile do
   use Mix.Project
 
-  def project,
-    do: [
+  def application do
+    [mod: {Asapi, []}]
+  end
+
+  def project do
+    [
       app: :asapi,
-      version: "0.7.0",
-      elixir: "~> 1.11",
+      version: "0.0.0",
+      elixir: "~> 1.14",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
-      deps: deps(),
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [coveralls: :test],
-      aliases: aliases()
+      aliases: [
+        asapi: ["run --no-halt"],
+        priv: ["cmd --cd priv npm run build"]
+      ],
+      deps: [
+        {:tesla, "~> 1.4"},
+        {:cachex, "~> 3.4"},
+        {:hackney, "~> 1.18"},
+        {:plug_cowboy, "~> 2.6"},
+        {:mock, "~> 0.3", only: :test},
+        {:excoveralls, "~> 0.14", only: :test}
+      ]
     ]
-
-  def application,
-    do: [
-      mod: {Asapi.Ext, []}
-    ]
-
-  defp deps,
-    do: [
-      {:trot, github: "hexedpackets/trot"},
-      {:tesla, "~> 1.4.0"},
-      {:cachex, "~> 3.4.0"},
-      {:hackney, "~> 1.18.0"},
-      {:mock, "~> 0.3.0", only: :test},
-      {:excoveralls, "~> 0.14.0", only: :test}
-    ]
-
-  defp aliases,
-    do: [
-      asapi: ["run --no-halt"]
-    ]
+  end
 end

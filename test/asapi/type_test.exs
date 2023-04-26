@@ -4,7 +4,9 @@
 defmodule Asapi.TypeTest do
   use ExUnit.Case
   use Plug.Test
+
   alias Asapi.Type
+
   doctest Type
 
   test "init returns options unmodified" do
@@ -22,7 +24,25 @@ defmodule Asapi.TypeTest do
 
   test "call sets html extension as default" do
     conn =
+      conn(:get, "/")
+      |> Type.call(nil)
+
+    assert conn.assigns[:asapi_ext] == :html
+    assert conn.path_info == []
+  end
+
+  test "call sets html extension without extension" do
+    conn =
       conn(:get, "/foo")
+      |> Type.call(nil)
+
+    assert conn.assigns[:asapi_ext] == :html
+    assert conn.path_info == ["foo"]
+  end
+
+  test "call sets html extension with incomplete extension" do
+    conn =
+      conn(:get, "/foo@")
       |> Type.call(nil)
 
     assert conn.assigns[:asapi_ext] == :html

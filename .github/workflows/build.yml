@@ -9,21 +9,16 @@ on:
     - cron: '0 11 * * 1'
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     name: Elixir ${{ matrix.elixir }} OTP ${{ matrix.otp }}
     strategy:
       matrix:
         elixir:
           - 1.14.4
-          - 1.13.4
-          - 1.12.3
-          - 1.11.4
         otp:
+          - 25.3
           - 24.3
-        include:
-          - elixir: 1.14.4
-            otp: 25.3
     steps:
       - uses: actions/checkout@v3
       - uses: erlef/setup-beam@v1
@@ -36,7 +31,7 @@ jobs:
       - run: mix coveralls
 
   deploy:
-    needs: build
+    needs: test
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     uses: ./.github/workflows/deploy.yml
     secrets: inherit

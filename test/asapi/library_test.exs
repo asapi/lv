@@ -4,7 +4,9 @@
 defmodule Asapi.LibraryTest do
   use ExUnit.Case
   use Plug.Test
+
   alias Asapi.Library
+
   doctest Library
 
   test "init returns options unmodified" do

@@ -2,12 +2,13 @@
 #  SPDX-License-Identifier: AGPL-3.0-or-later
 
 defmodule Asapi.Ext.Repo do
-  alias Asapi.Ext.Version
-  alias Asapi.Aar
   use Tesla
 
-  plug(Tesla.Middleware.FollowRedirects)
-  plug(Tesla.Middleware.Retry, max_retries: 3)
+  alias Asapi.Ext.Version
+  alias Asapi.Aar
+
+  plug Tesla.Middleware.FollowRedirects
+  plug Tesla.Middleware.Retry, max_retries: 3
 
   @repos [
     "https://maven.google.com",
@@ -20,9 +21,6 @@ defmodule Asapi.Ext.Repo do
       case aar.revision do
         nil -> ""
         "" -> ""
-        "latest.integration" -> ""
-        "latest.milestone" -> ""
-        "latest.release" -> ""
         rev -> String.slice(rev, 0..-2)
       end
 
@@ -89,9 +87,6 @@ defmodule Asapi.Ext.Repo do
     |> case do
       nil -> true
       "" -> true
-      "latest.integration" -> true
-      "latest.milestone" -> true
-      "latest.release" -> true
       rev -> String.ends_with?(rev, "+")
     end
   end

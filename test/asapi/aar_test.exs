@@ -3,7 +3,9 @@
 
 defmodule Asapi.AarTest do
   use ExUnit.Case
+
   alias Asapi.Aar
+
   doctest Aar
 
   @group "group"

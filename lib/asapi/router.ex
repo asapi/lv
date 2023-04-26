@@ -2,15 +2,28 @@
 #  SPDX-License-Identifier: AGPL-3.0-or-later
 
 defmodule Asapi.Router do
+  use Plug.Router
+
   alias Asapi.Aar
 
-  import Asapi.Util, only: [build_url: 2, redirect_to: 1]
+  import Asapi.Response
 
-  defmacro route(aar) do
-    quote do: assign(var!(conn), :asapi_aar, unquote(aar))
+  if Mix.env() == :prod do
+    plug Plug.SSL, rewrite_on: [:x_forwarded_proto]
+  else
+    plug Plug.Logger
   end
 
-  use Trot.Router
+  plug Plug.Static, at: "/", from: :asapi
+
+  plug Asapi.Library
+  plug Asapi.Type
+
+  plug :match
+  plug :dispatch
+
+  plug Asapi.Reload
+  plug Asapi.Lv
 
   get "/:group/:name/+" do
     ext =
@@ -19,24 +32,28 @@ defmodule Asapi.Router do
         ext -> "@#{ext}"
       end
 
-    conn
-    |> build_url("/#{group}/#{name}#{ext}")
-    |> redirect_to
+    redirect_to(conn, "/#{group}/#{name}#{ext}")
+  end
+
+  defmacrop aar(fields) do
+    quote do
+      assign(var!(conn), :asapi_aar, struct(Aar, unquote(fields)))
+    end
   end
 
   get "/:g/:n" do
-    route(%Aar{group: g, name: n})
+    aar group: g, name: n
   end
 
   get "/:g/:n/:v" do
-    route(%Aar{group: g, name: n, revision: v})
+    aar group: g, name: n, revision: v
   end
 
   get "/:g/:n/:v/:c" do
-    route(%Aar{group: g, name: n, revision: v, classifier: c})
+    aar group: g, name: n, revision: v, classifier: c
   end
 
   get "/*_path" do
-    route(%Aar{group: nil, name: nil})
+    aar group: nil, name: nil
   end
 end

@@ -3,7 +3,9 @@
 
 defmodule Asapi.Ext.VersionTest do
   use ExUnit.Case
+
   alias Asapi.Ext.Version
+
   doctest Version
 
   test "defaults set to 0 or nil" do

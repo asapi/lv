@@ -4,12 +4,15 @@
 defmodule Asapi.ReloadTest do
   use ExUnit.Case
   use Plug.Test
-  import Mock
-  import ExUnit.CaptureLog
+
   alias Asapi.Aar
   alias Asapi.Reload
   alias Asapi.Ext.Data
+
   doctest Reload
+
+  import ExUnit.CaptureLog
+  import Mock
 
   @aar %Aar{group: "any.group", name: "lv13", revision: "0.1"}
 
@@ -26,9 +29,7 @@ defmodule Asapi.ReloadTest do
     assert Reload.call(conn, nil) == conn
   end
 
-  test_with_mock "call ignores unset aar and redirects",
-                 Data,
-                 clear!: fn _ -> raise "error" end do
+  test_with_mock "call ignores unset aar and redirects", Data, clear!: fn _ -> raise "error" end do
     conn =
       conn(:get, "/foo?reload")
       |> put_private(:test, :value)
@@ -38,9 +39,8 @@ defmodule Asapi.ReloadTest do
     refute called(Data.clear!(@aar))
   end
 
-  test_with_mock "call ignores aar with invalid group and redirects",
-                 Data,
-                 clear!: fn _ -> nil end do
+  test_with_mock "call ignores aar with invalid group and redirects", Data,
+    clear!: fn _ -> nil end do
     conn =
       conn(:get, "/foo?reload")
       |> put_private(:test, :value)
@@ -51,9 +51,7 @@ defmodule Asapi.ReloadTest do
     refute called(Data.clear!(@aar))
   end
 
-  test_with_mock "call ignores aar with invalid name and redirects",
-                 Data,
-                 clear!: fn _ -> nil end do
+  test_with_mock "call ignores aar with invalid name and redirects", Data, clear!: fn _ -> nil end do
     conn =
       conn(:get, "/foo?reload")
       |> put_private(:test, :value)
@@ -64,9 +62,7 @@ defmodule Asapi.ReloadTest do
     refute called(Data.clear!(@aar))
   end
 
-  test_with_mock "call clears cached values and redirects",
-                 Data,
-                 clear!: fn _ -> nil end do
+  test_with_mock "call clears cached values and redirects", Data, clear!: fn _ -> nil end do
     conn =
       conn(:get, "/foo?reload")
       |> put_private(:test, :value)
@@ -77,9 +73,8 @@ defmodule Asapi.ReloadTest do
     assert called(Data.clear!(@aar))
   end
 
-  test_with_mock "call logs message on clear! error and redirects",
-                 Data,
-                 clear!: fn _ -> raise "error" end do
+  test_with_mock "call logs message on clear! error and redirects", Data,
+    clear!: fn _ -> raise "error" end do
     conn =
       conn(:get, "/foo?reload")
       |> put_private(:test, :value)

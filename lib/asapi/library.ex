@@ -3,14 +3,16 @@
 
 defmodule Asapi.Library do
   alias Plug.Conn
-  import Plug.Conn, only: [fetch_query_params: 1]
-  import Trot.Router, only: [do_redirect: 2]
-  import Asapi.Util, only: [build_url: 3]
 
   @behaviour Plug
 
+  import Asapi.Response
+  import Plug.Conn, only: [fetch_query_params: 1]
+
+  @impl true
   def init(opts), do: opts
 
+  @impl true
   def call(%Conn{} = conn, _opts) do
     conn
     |> fetch_query_params
@@ -19,8 +21,7 @@ defmodule Asapi.Library do
 
   defp handle(%Conn{query_params: %{"library" => lib}} = conn) do
     conn
-    |> build_url("/#{String.replace(lib, ":", "/")}", ["library"])
-    |> do_redirect(conn)
+    |> redirect_to("/#{String.replace(lib, ":", "/")}", ["library"])
   end
 
   defp handle(%Conn{} = conn), do: conn

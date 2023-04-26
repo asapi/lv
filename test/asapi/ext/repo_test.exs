@@ -3,8 +3,11 @@
 
 defmodule Asapi.Ext.RepoTest do
   use ExUnit.Case
+
   alias Asapi.Aar
   alias Asapi.Ext.Repo
+
+  doctest Repo
 
   @aar %Aar{group: "any.group", name: "lv13", revision: "0.0"}
 
@@ -18,8 +21,11 @@ defmodule Asapi.Ext.RepoTest do
           | status: 200,
             body:
               case Path.extname(env.url) do
-                ".aar" -> File.read!("test/aar/#{Path.basename(env.url)}")
-                ".xml" -> "<version>0.1</version><version>v0.0</version><version>0.0</version>"
+                ".aar" ->
+                  File.read!("test/aar/#{Path.basename(env.url)}")
+
+                ".xml" ->
+                  "<version>1.1</version><version>0.1</version><version>v0.0</version><version>0.0</version>"
               end
         }
       end
@@ -29,6 +35,11 @@ defmodule Asapi.Ext.RepoTest do
   end
 
   test "resolve! returns highest version" do
+    assert Repo.resolve!(%{@aar | revision: nil}) == "1.1"
+    assert Repo.resolve!(%{@aar | revision: ""}) == "1.1"
+  end
+
+  test "resolve! returns highest matching version" do
     assert Repo.resolve!(@aar) == "0.1"
   end
 
@@ -45,9 +56,9 @@ defmodule Asapi.Ext.RepoTest do
     assert Repo.resolve?(%{@aar | revision: "1.+"})
     assert Repo.resolve?(%{@aar | revision: "1.2+"})
     assert Repo.resolve?(%{@aar | revision: "1.2.+"})
-    assert Repo.resolve?(%{@aar | revision: "latest.release"})
-    assert Repo.resolve?(%{@aar | revision: "latest.milestone"})
-    assert Repo.resolve?(%{@aar | revision: "latest.integration"})
+    refute Repo.resolve?(%{@aar | revision: "latest.release"})
+    refute Repo.resolve?(%{@aar | revision: "latest.milestone"})
+    refute Repo.resolve?(%{@aar | revision: "latest.integration"})
     refute Repo.resolve?(%{@aar | revision: "1.2.3"})
     refute Repo.resolve?(%{@aar | revision: "1.2"})
     refute Repo.resolve?(%{@aar | revision: "1"})

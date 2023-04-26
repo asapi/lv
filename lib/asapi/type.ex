@@ -4,12 +4,14 @@
 defmodule Asapi.Type do
   alias Plug.Conn
 
-  import Plug.Conn, only: [assign: 3]
-
   @behaviour Plug
 
+  import Plug.Conn, only: [assign: 3]
+
+  @impl true
   def init(opts), do: opts
 
+  @impl true
   def call(%Conn{state: :unset} = conn, _opts) do
     {last, ext} = split_ext(conn)
 
