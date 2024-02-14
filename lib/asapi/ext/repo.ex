@@ -61,7 +61,7 @@ defmodule Asapi.Ext.Repo do
 
   defp versions(response) do
     if response.status in 200..299 do
-      ~R{<version>([^<]+)</version>}
+      ~r{<version>([^<]+)</version>}
       |> Regex.scan(response.body)
       |> Enum.map(&version/1)
       |> Enum.reject(&is_nil/1)

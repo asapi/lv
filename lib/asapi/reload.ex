@@ -31,7 +31,7 @@ defmodule Asapi.Reload do
     try do
       Data.clear!(aar)
     rescue
-      error -> Logger.warn(Exception.message(error))
+      error -> Logger.warning(Exception.message(error))
     end
 
     conn

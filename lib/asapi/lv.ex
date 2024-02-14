@@ -54,7 +54,7 @@ defmodule Asapi.Lv do
       end
     rescue
       error ->
-        Logger.warn(Exception.message(error))
+        Logger.warning(Exception.message(error))
         @unknown
     end
   end

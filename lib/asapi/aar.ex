@@ -11,8 +11,8 @@ defmodule Asapi.Aar do
 
   def sdk_levels!(aar_file) do
     info = load_manifest!(aar_file)
-    min = sdk_ver(Regex.run(~R/android:minSdkVersion="([0-9]+)"/, info))
-    max = sdk_ver(Regex.run(~R/android:maxSdkVersion="([0-9]+)"/, info))
+    min = sdk_ver(Regex.run(~r/android:minSdkVersion="([0-9]+)"/, info))
+    max = sdk_ver(Regex.run(~r/android:maxSdkVersion="([0-9]+)"/, info))
 
     case {min, max} do
       {nil, nil} -> "1+"

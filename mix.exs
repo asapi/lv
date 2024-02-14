@@ -19,12 +19,12 @@ defmodule Asapi.Mixfile do
         priv: ["cmd --cd priv npm run build"]
       ],
       deps: [
-        {:tesla, "~> 1.4"},
-        {:cachex, "~> 3.4"},
-        {:hackney, "~> 1.18"},
-        {:plug_cowboy, "~> 2.6"},
+        {:tesla, "~> 1.8"},
+        {:cachex, "~> 3.6"},
+        {:hackney, "~> 1.20"},
+        {:plug_cowboy, "~> 2.7"},
         {:mock, "~> 0.3", only: :test},
-        {:excoveralls, "~> 0.14", only: :test}
+        {:excoveralls, "~> 0.16", only: :test}
       ]
     ]
   end

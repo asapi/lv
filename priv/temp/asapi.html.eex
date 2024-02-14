@@ -30,8 +30,8 @@
 <div style="flex-grow:1">
 <h4 style="margin-top:0">Android version history</h4>
 <p>
-<img alt="API level 34" src="https://img.shields.io/badge/API-34-lightgrey.svg">
-Android 14 Beta
+<img alt="API level 34" src="https://img.shields.io/badge/API-34-green.svg">
+Android 14
 <small>[2023] Upside Down Cake</small>
 <p>
 <img alt="API level 33" src="https://img.shields.io/badge/API-33-green.svg">
@@ -58,6 +58,13 @@ Android 10
 Android 9
 <small>[2018] Pie</small>
 <p>
+<details>
+<summary>
+<img alt="API level 21 to 27" src="https://img.shields.io/badge/API-21--27-yellow.svg">
+Android 5.0 to 8.1
+<small>[2014-2017]</small>
+</summary>
+<p>
 <img alt="API level 27" src="https://img.shields.io/badge/API-27-yellow.svg">
 Android 8.1
 <small>[2017] Oreo</small>
@@ -78,13 +85,6 @@ Android 7.0
 Android 6.0
 <small>[2015] Marshmallow</small>
 <p>
-<details>
-<summary>
-<img alt="API level 1 to 22" src="https://img.shields.io/badge/API-1--22-yellow.svg">
-Android 5.1 and before
-<small>[2008-2015]</small>
-</summary>
-<p>
 <img alt="API level 22" src="https://img.shields.io/badge/API-22-yellow.svg">
 Android 5.1
 <small>[2015] Lollipop</small>
@@ -92,12 +92,20 @@ Android 5.1
 <img alt="API level 21" src="https://img.shields.io/badge/API-21-yellow.svg">
 Android 5.0
 <small>[2014] Lollipop</small>
+</details>
 <p>
-<img alt="API level 20" src="https://img.shields.io/badge/API-20-yellow.svg">
+<details>
+<summary>
+<img alt="API level 1 to 20" src="https://img.shields.io/badge/API-1--20-red.svg">
+Android 1.0 to 4.4
+<small>[2008-2014]</small>
+</summary>
+<p>
+<img alt="API level 20" src="https://img.shields.io/badge/API-20-red.svg">
 Android 4.4 Wear
 <small>[2014] KitKat</small>
 <p>
-<img alt="API level 19" src="https://img.shields.io/badge/API-19-yellow.svg">
+<img alt="API level 19" src="https://img.shields.io/badge/API-19-red.svg">
 Android 4.4
 <small>[2013] KitKat</small>
 <p>
@@ -120,13 +128,6 @@ Android 4.0.3
 <img alt="API level 14" src="https://img.shields.io/badge/API-14-red.svg">
 Android 4.0
 <small>[2011] Ice Cream Sandwich</small>
-<p>
-<details>
-<summary>
-<img alt="API level 1 to 13" src="https://img.shields.io/badge/API-1--13-red.svg">
-Android 3.2 and before
-<small>[2008-2011]</small>
-</summary>
 <p>
 <img alt="API level 13" src="https://img.shields.io/badge/API-13-red.svg">
 Android 3.2
@@ -180,7 +181,6 @@ Android 1.1
 Android 1.0
 <small>[2008]</small>
 </details>
-</details>
 </div>
 <div class="wrap" style="text-align:right">
 <div><h4>Repositories</h4><ul>
@@ -204,5 +204,5 @@ asapi/lv</a>
 </div>
 <hr>
 <p style="text-align:right">
-<small>&copy; 2017-2023 &emsp; tynn &emsp; Mainz &hearts; Berlin</small>
+<small>&copy; 2017-2024 &emsp; tynn &emsp; Mainz &hearts; Berlin</small>
 </div>
